@@ -31,8 +31,20 @@ public class RGBColor {
 		return b;
 	}
 
-	public RGBColor applyGamma(double gammaInverse) {
-		return new RGBColor(Math.pow(r, gammaInverse), Math.pow(g, gammaInverse), Math.pow(b, gammaInverse));
+	public void applyGamma(double gammaInverse) {
+		r = Math.pow(r, gammaInverse);
+		g = Math.pow(g, gammaInverse);
+		b = Math.pow(b, gammaInverse);
+	}
+
+	public void correctColor() {
+		double max = Math.max(r, Math.max(g, b));
+		if (max > 1.0) {
+			r /= max;
+			g /= max;
+			b /= max;
+		}
+		
 	}
 	
 	
