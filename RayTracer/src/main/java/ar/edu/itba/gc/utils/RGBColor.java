@@ -1,4 +1,4 @@
-package primitives;
+package ar.edu.itba.gc.utils;
 
 public class RGBColor {
 	

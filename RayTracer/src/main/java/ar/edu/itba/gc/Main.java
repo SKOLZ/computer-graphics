@@ -1,5 +1,6 @@
-import primitives.World;
+package ar.edu.itba.gc;
 
+import ar.edu.itba.gc.primitives.World;
 
 public class Main {
 	
