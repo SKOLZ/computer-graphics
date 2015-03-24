@@ -23,6 +23,14 @@ public class Sphere extends GeometricObject{
 		return radius;
 	}
 	
+	public void setCenter(Vector4d center) {
+		this.center = center;
+	}
+
+	public void setRadius(double radius) {
+		this.radius = radius;
+	}
+
 	@Override
 	protected boolean hit(Ray ray, double tmin) {
 		double t;

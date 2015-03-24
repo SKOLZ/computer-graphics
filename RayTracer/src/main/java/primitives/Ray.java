@@ -6,7 +6,10 @@ public class Ray {
 
 	private Vector4d origin;
 	private Vector4d direction;
-	
+		
+	public Ray() {
+	}
+
 	public Ray(Vector4d origin, Vector4d direction) {
 		super();
 		this.origin = origin;
@@ -20,6 +23,16 @@ public class Ray {
 	public Vector4d getDirection() {
 		return direction;
 	}
+
+	public void setOrigin(Vector4d origin) {
+		this.origin = origin;
+	}
+
+	public void setDirection(Vector4d direction) {
+		this.direction = direction;
+	}
+	
+	
 	
 	
 }
