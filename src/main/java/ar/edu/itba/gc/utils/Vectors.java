@@ -1,23 +1,23 @@
 package ar.edu.itba.gc.utils;
 
-import javax.vecmath.Vector4d;
+import javax.vecmath.Vector3d;
 
 public class Vectors {
 
-	public static Vector4d sub(final Vector4d v1, final Vector4d v2) {
-		Vector4d ret = new Vector4d(v1);
+	public static Vector3d sub(final Vector3d v1, final Vector3d v2) {
+		Vector3d ret = new Vector3d(v1);
 		ret.sub(v2);
 		return ret;
 	}
 	
-	public static Vector4d plus(final Vector4d v1, final Vector4d v2) {
-		Vector4d ret = new Vector4d(v1);
+	public static Vector3d plus(final Vector3d v1, final Vector3d v2) {
+		Vector3d ret = new Vector3d(v1);
 		ret.add(v2);
 		return ret;
 	}
 	
-	public static Vector4d scale(final Vector4d v1, final double d) {
-		Vector4d ret = new Vector4d(v1);
+	public static Vector3d scale(final Vector3d v1, final double d) {
+		Vector3d ret = new Vector3d(v1);
 		ret.scale(d);
 		return ret;
 	}

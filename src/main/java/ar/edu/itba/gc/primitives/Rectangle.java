@@ -1,6 +1,6 @@
-package ar.edu.itba.gc.objects;
+package ar.edu.itba.gc.primitives;
 
-import javax.vecmath.Vector4d;
+import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.materials.Material;
 import ar.edu.itba.gc.utils.RGBColor;
@@ -8,15 +8,15 @@ import ar.edu.itba.gc.utils.Vectors;
 
 public class Rectangle extends Plane {
 
-	private Vector4d corner;
-	private Vector4d sideA;
-	private Vector4d sideB;
+	private Vector3d corner;
+	private Vector3d sideA;
+	private Vector3d sideB;
 	private double aLengthSquared;
 	private double bLengthSquared;
 
-	public Rectangle(Vector4d sideA, Vector4d sideB, double aLength,
-			double bLength, Material material, RGBColor color, Vector4d point,
-			Vector4d normal) {
+	public Rectangle(Vector3d sideA, Vector3d sideB, double aLength,
+			double bLength, Material material, RGBColor color, Vector3d point,
+			Vector3d normal) {
 		super(material, color, point, normal);
 		this.sideA = sideA;
 		this.sideB = sideB;
@@ -25,11 +25,11 @@ public class Rectangle extends Plane {
 	}
 
 	@Override
-	public double hit(Vector4d origin, Vector4d direction) {
+	public double hit(Vector3d origin, Vector3d direction) {
 		double t = super.hit(origin, direction);
 		if (t > 0.0) {
-			Vector4d p = Vectors.plus(origin, Vectors.scale(direction, t));
-			Vector4d d = Vectors.sub(p, corner);
+			Vector3d p = Vectors.plus(origin, Vectors.scale(direction, t));
+			Vector3d d = Vectors.sub(p, corner);
 
 			double ddota = d.dot(sideA);
 

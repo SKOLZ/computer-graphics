@@ -1,6 +1,6 @@
-package ar.edu.itba.gc.objects;
+package ar.edu.itba.gc.primitives;
 
-import javax.vecmath.Vector4d;
+import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.materials.Material;
 import ar.edu.itba.gc.utils.RGBColor;
@@ -24,5 +24,5 @@ public abstract class GeometricObject {
 		return color;
 	}
 
-	public abstract double hit(Vector4d origin, Vector4d direction);
+	public abstract double hit(Vector3d origin, Vector3d direction);
 }

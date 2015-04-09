@@ -44,9 +44,11 @@ public class RGBColor {
 			g /= max;
 			b /= max;
 		}
-		
 	}
 	
+	public static RGBColor mult(RGBColor c, double d) {
+		return new RGBColor(c.getR() * d, c.getG() * d, c.getB() * d);
+	}
 	
 	
 	

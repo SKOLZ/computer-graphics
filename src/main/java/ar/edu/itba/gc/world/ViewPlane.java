@@ -1,4 +1,4 @@
-package ar.edu.itba.gc.primitives;
+package ar.edu.itba.gc.world;
 
 public class ViewPlane {
 	
@@ -7,6 +7,7 @@ public class ViewPlane {
 	private double pixelSize;
 	private double gamma;
 	private double gammaInverse;
+	private int sampleNum;
 	
 	public ViewPlane() {
 		
@@ -20,6 +21,16 @@ public class ViewPlane {
 		this.pixelSize = pixelSize;
 		this.gamma = gamma;
 		this.gammaInverse = gammaInverse;
+	}
+	
+	
+
+	public int getSampleNum() {
+		return sampleNum;
+	}
+
+	public void setSampleNum(int sampleNum) {
+		this.sampleNum = sampleNum;
 	}
 
 	public int getHorizontalRes() {

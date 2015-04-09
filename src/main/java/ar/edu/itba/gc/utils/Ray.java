@@ -2,30 +2,34 @@ package ar.edu.itba.gc.utils;
 
 import java.util.List;
 
-import javax.vecmath.Vector4d;
+import javax.vecmath.Vector3d;
 
-import ar.edu.itba.gc.objects.GeometricObject;
+import ar.edu.itba.gc.primitives.GeometricObject;
 
 public class Ray {
 
-	private Vector4d origin;
-	private Vector4d direction;
+	private Vector3d origin;
+	private Vector3d direction;
 	private double tmin = Double.MAX_VALUE;
 		
 	public Ray() {
 	}
 
-	public Ray(Vector4d origin, Vector4d direction) {
+	public Ray(Vector3d origin, Vector3d direction) {
 		super();
 		this.origin = origin;
 		this.direction = direction;
 	}
 	
-	public Vector4d getOrigin() {
+	public void setOrigin(Vector3d origin) {
+		this.origin = origin;
+	}
+
+	public Vector3d getOrigin() {
 		return origin;
 	}
 	
-	public Vector4d getDirection() {
+	public Vector3d getDirection() {
 		return direction;
 	}
 	
@@ -34,12 +38,17 @@ public class Ray {
 	}
 	
 	public ShadeRec hit(List<GeometricObject> objects, RGBColor background) {
-		ShadeRec sr = new ShadeRec(background);
+		ShadeRec sr = new ShadeRec();
+		Vector3d normal;
+		Vector3d localHitPoint;
 		for (GeometricObject obj : objects) {
 			double t = obj.hit(this.origin, this.direction);
 			if (t > 0.0 && t < this.tmin) {
 				this.tmin = t;
-				sr = new ShadeRec(true, obj.getColor());
+				Vector3d hitPoint = Vectors.plus(origin, Vectors.scale(direction, t)); 
+				sr = new ShadeRec(true, obj.getMaterial(), hitPoint);
+				normal = sr.getNormal();
+				localHitPoint = sr.getLocalHitPoint();
 			}
 		}
 		return sr;

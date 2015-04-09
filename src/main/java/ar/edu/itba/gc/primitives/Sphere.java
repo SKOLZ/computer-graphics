@@ -1,6 +1,6 @@
-package ar.edu.itba.gc.objects;
+package ar.edu.itba.gc.primitives;
 
-import javax.vecmath.Vector4d;
+import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.materials.Material;
 import ar.edu.itba.gc.utils.RGBColor;
@@ -8,17 +8,17 @@ import ar.edu.itba.gc.utils.Vectors;
 
 public class Sphere extends GeometricObject {
 
-	private Vector4d center;
+	private Vector3d center;
 	private double radius;
 
-	public Sphere(Material material, RGBColor color, Vector4d center,
+	public Sphere(Material material, RGBColor color, Vector3d center,
 			double radius) {
 		super(material, color);
 		this.center = center;
 		this.radius = radius;
 	}
 
-	public Vector4d getCenter() {
+	public Vector3d getCenter() {
 		return center;
 	}
 
@@ -26,7 +26,7 @@ public class Sphere extends GeometricObject {
 		return radius;
 	}
 
-	public void setCenter(Vector4d center) {
+	public void setCenter(Vector3d center) {
 		this.center = center;
 	}
 
@@ -35,9 +35,9 @@ public class Sphere extends GeometricObject {
 	}
 
 	@Override
-	public double hit(Vector4d origin, Vector4d direction) {
+	public double hit(Vector3d origin, Vector3d direction) {
 		double t;
-		Vector4d temp = Vectors.sub(origin, center);
+		Vector3d temp = Vectors.sub(origin, center);
 		double a = direction.dot(direction);
 		double b = 2.0 * temp.dot(direction);
 		double c = temp.dot(temp) - radius * radius;

@@ -1,6 +1,6 @@
 package ar.edu.itba.gc;
 
-import ar.edu.itba.gc.primitives.World;
+import ar.edu.itba.gc.world.World;
 
 public class Main {
 	

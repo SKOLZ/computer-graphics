@@ -1,4 +1,4 @@
-package ar.edu.itba.gc.primitives;
+package ar.edu.itba.gc.world;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.vecmath.Vector4d;
+import javax.vecmath.Vector3d;
 
-import ar.edu.itba.gc.objects.GeometricObject;
-import ar.edu.itba.gc.objects.Plane;
-import ar.edu.itba.gc.objects.Sphere;
+import ar.edu.itba.gc.lights.AmbientLight;
+import ar.edu.itba.gc.lights.Light;
+import ar.edu.itba.gc.primitives.GeometricObject;
+import ar.edu.itba.gc.primitives.Plane;
+import ar.edu.itba.gc.primitives.Sphere;
 import ar.edu.itba.gc.tracers.MultipleObjectTracer;
 import ar.edu.itba.gc.tracers.Tracer;
 import ar.edu.itba.gc.utils.RGBColor;
@@ -23,11 +25,15 @@ public class World {
 	public ViewPlane vp;
 	public RGBColor background;
 	public List<GeometricObject> objects;
+	public List<Light> lights;
+	public Light ambientLight;
 	public Tracer tracer;
 
 	public World() {
 		this.vp = new ViewPlane();
 		this.objects = new ArrayList<GeometricObject>();
+		this.lights = new ArrayList<Light>();
+		this.ambientLight = new AmbientLight();
 		this.tracer = new MultipleObjectTracer(this);
 	}
 
@@ -35,6 +41,10 @@ public class World {
 		this.objects.add(obj);
 	}
 
+	public void addLigt(Light light) {
+		this.lights.add(light);
+	}
+	
 	public void build() {
 		vp.setHorizontalRes(3000);
 		vp.setVerticalRes(3000);
@@ -43,19 +53,19 @@ public class World {
 
 		this.background = new RGBColor(0, 0, 0);
 
-		this.addObject(new Sphere(null, new RGBColor(1, 1, 1), new Vector4d(
-				0.0, 0.0, 800.0, 0.0), 2000.0));
-		// this.addObject(new Sphere(null, new RGBColor(1, 0, 0), new Vector4d(
+		this.addObject(new Sphere(null, new RGBColor(1, 1, 1), new Vector3d(
+				0.0, 0.0, 800.0), 2000.0));
+		// this.addObject(new Sphere(null, new RGBColor(1, 0, 0), new Vector3d(
 		// 0.0, 0.0, 0.0, 0.0), 85.0));
 
-		this.addObject(new Plane(null, new RGBColor(1, 0, 1), new Vector4d(0.0,
-				0.0, 800.0, 0.0), new Vector4d(1, 0, 1, 0.0)));
-		this.addObject(new Plane(null, new RGBColor(0, 0, 1), new Vector4d(0.0,
-				0.0, 800.0, 0.0), new Vector4d(-1, 0, 1, 0.0)));
-		this.addObject(new Plane(null, new RGBColor(0, 1, 0), new Vector4d(0.0,
-				0.0, 800.0, 0.0), new Vector4d(0, 1, 1, 0.0)));
-		this.addObject(new Plane(null, new RGBColor(1, 0, 0), new Vector4d(0.0,
-				0.0, 800.0, 0.0), new Vector4d(0, -1, 1, 0.0)));
+		this.addObject(new Plane(null, new RGBColor(1, 0, 1), new Vector3d(0,
+				0, 800), new Vector3d(1, 0, 1)));
+		this.addObject(new Plane(null, new RGBColor(0, 0, 1), new Vector3d(0,
+				0, 800), new Vector3d(-1, 0, 1)));
+		this.addObject(new Plane(null, new RGBColor(0, 1, 0), new Vector3d(0.0,
+				0, 800), new Vector3d(0, 1, 1)));
+		this.addObject(new Plane(null, new RGBColor(1, 0, 0), new Vector3d(0.0,
+				0, 800), new Vector3d(0, -1, 1)));
 	}
 
 	public void renderScene() {
@@ -70,8 +80,8 @@ public class World {
 						* (c - (vp.getHorizontalRes() / 2.0 + 0.5));
 				double y = vp.getPixelSize()
 						* (r - (vp.getVerticalRes() / 2.0 + 0.5));
-				Ray ray = new Ray(new Vector4d(x, y, z, 0.0), new Vector4d(0.0,
-						0.0, -1.0, 0.0));
+				Ray ray = new Ray(new Vector3d(x, y, z), new Vector3d(0.0,
+						0.0, -1.0));
 				ShadeRec sr = ray.hit(objects, this.background);
 				pixelColor = sr.getColor();
 				displayPixel(r, c, pixelColor, img);
@@ -83,8 +93,8 @@ public class World {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
+
 
 	private void displayPixel(int i, int j, final RGBColor pixelColor,
 			BufferedImage img) {
