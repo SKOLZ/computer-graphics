@@ -1,10 +1,9 @@
-package ar.edu.itba.gc.utils;
-
-import java.util.List;
+package ar.edu.itba.gc.util;
 
 import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.primitives.GeometricObject;
+import ar.edu.itba.gc.world.World;
 
 public class Ray {
 
@@ -37,19 +36,10 @@ public class Ray {
 		return tmin;
 	}
 	
-	public ShadeRec hit(List<GeometricObject> objects, RGBColor background) {
+	public ShadeRec hit(World world) {
 		ShadeRec sr = new ShadeRec();
-		Vector3d normal;
-		Vector3d localHitPoint;
-		for (GeometricObject obj : objects) {
-			double t = obj.hit(this.origin, this.direction);
-			if (t > 0.0 && t < this.tmin) {
-				this.tmin = t;
-				Vector3d hitPoint = Vectors.plus(origin, Vectors.scale(direction, t)); 
-				sr = new ShadeRec(true, obj.getMaterial(), hitPoint);
-				normal = sr.getNormal();
-				localHitPoint = sr.getLocalHitPoint();
-			}
+		for (GeometricObject obj : world.objects) {
+			sr = obj.hit(sr, this.origin, this.direction);
 		}
 		return sr;
 	}

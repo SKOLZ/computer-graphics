@@ -1,7 +1,7 @@
-package ar.edu.itba.gc.tracers;
+package ar.edu.itba.gc.tracer;
 
-import ar.edu.itba.gc.utils.RGBColor;
-import ar.edu.itba.gc.utils.Ray;
+import ar.edu.itba.gc.util.RGBColor;
+import ar.edu.itba.gc.util.Ray;
 import ar.edu.itba.gc.world.World;
 
 public abstract class Tracer {

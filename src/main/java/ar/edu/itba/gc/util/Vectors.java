@@ -1,4 +1,4 @@
-package ar.edu.itba.gc.utils;
+package ar.edu.itba.gc.util;
 
 import javax.vecmath.Vector3d;
 

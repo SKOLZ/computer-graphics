@@ -1,9 +1,9 @@
-package ar.edu.itba.gc.lights;
+package ar.edu.itba.gc.light;
 
 import javax.vecmath.Vector3d;
 
-import ar.edu.itba.gc.utils.RGBColor;
-import ar.edu.itba.gc.utils.ShadeRec;
+import ar.edu.itba.gc.util.RGBColor;
+import ar.edu.itba.gc.util.ShadeRec;
 
 public abstract class Light {
 	
@@ -28,10 +28,10 @@ public abstract class Light {
 	public RGBColor getColor() {
 		return color;
 	}
-
-	public abstract Vector3d getDirection(ShadeRec sr);
 	
-	public RGBColor L(ShadeRec sr) {
+	public RGBColor L() {
 		return RGBColor.mult(getColor(), getLs());
 	}
+
+	public abstract Vector3d getDirection(ShadeRec sr);
 }

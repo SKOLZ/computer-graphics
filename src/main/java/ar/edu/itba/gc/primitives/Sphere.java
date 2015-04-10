@@ -2,18 +2,17 @@ package ar.edu.itba.gc.primitives;
 
 import javax.vecmath.Vector3d;
 
-import ar.edu.itba.gc.materials.Material;
-import ar.edu.itba.gc.utils.RGBColor;
-import ar.edu.itba.gc.utils.Vectors;
+import ar.edu.itba.gc.material.Material;
+import ar.edu.itba.gc.util.ShadeRec;
+import ar.edu.itba.gc.util.Vectors;
 
 public class Sphere extends GeometricObject {
 
 	private Vector3d center;
 	private double radius;
 
-	public Sphere(Material material, RGBColor color, Vector3d center,
-			double radius) {
-		super(material, color);
+	public Sphere(Material material, Vector3d center, double radius) {
+		super(material);
 		this.center = center;
 		this.radius = radius;
 	}
@@ -35,7 +34,7 @@ public class Sphere extends GeometricObject {
 	}
 
 	@Override
-	public double hit(Vector3d origin, Vector3d direction) {
+	public ShadeRec hit(ShadeRec sr, Vector3d origin, Vector3d direction) {
 		double t;
 		Vector3d temp = Vectors.sub(origin, center);
 		double a = direction.dot(direction);
@@ -43,21 +42,34 @@ public class Sphere extends GeometricObject {
 		double c = temp.dot(temp) - radius * radius;
 		double disc = b * b - 4.0 * a * c;
 
-		if (disc < 0.0)
-			return -1.0;
-		else {
+		if (disc < 0.0) {
+			return sr;
+		} else {
 			double e = Math.sqrt(disc);
 			double denom = 2.0 * a;
 			t = (-b - e) / denom;
-			if (t > kEps) {
-				return t;
+
+			if (t > kEps && t < sr.getT()) {
+				Vector3d hitPoint = Vectors.plus(origin,
+						Vectors.scale(direction, t));
+				Vector3d normal = Vectors.scale(
+						Vectors.plus(temp, Vectors.scale(direction, t)),
+						1 / radius);
+				return new ShadeRec(true, this.getMaterial(), normal, hitPoint,
+						hitPoint, direction, t);
 			}
 			t = (-b + e) / denom;
-			if (t > kEps) {
-				return t;
+			if (t > kEps && t < sr.getT()) {
+				Vector3d hitPoint = Vectors.plus(origin,
+						Vectors.scale(direction, t));
+				Vector3d normal = Vectors.scale(
+						Vectors.plus(temp, Vectors.scale(direction, t)),
+						1 / radius);
+				return new ShadeRec(true, this.getMaterial(), normal, hitPoint,
+						hitPoint, direction, t);
 			}
 		}
-		return -1.0;
+		return sr;
 	}
 
 }

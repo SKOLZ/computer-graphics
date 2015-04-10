@@ -2,18 +2,17 @@ package ar.edu.itba.gc.primitives;
 
 import javax.vecmath.Vector3d;
 
-import ar.edu.itba.gc.materials.Material;
-import ar.edu.itba.gc.utils.RGBColor;
-import ar.edu.itba.gc.utils.Vectors;
+import ar.edu.itba.gc.material.Material;
+import ar.edu.itba.gc.util.ShadeRec;
+import ar.edu.itba.gc.util.Vectors;
 
 public class Plane extends GeometricObject {
 
 	private Vector3d point;
 	private Vector3d normal;
 
-	public Plane(Material material, RGBColor color, Vector3d point,
-			Vector3d normal) {
-		super(material, color);
+	public Plane(Material material, Vector3d point, Vector3d normal) {
+		super(material);
 		this.point = point;
 		this.normal = normal;
 	}
@@ -27,15 +26,18 @@ public class Plane extends GeometricObject {
 	}
 
 	@Override
-	public double hit(Vector3d origin, Vector3d direction) {
+	public ShadeRec hit(ShadeRec sr, Vector3d origin, Vector3d direction) {
 		double t = Vectors.sub(point, origin).dot(normal)
 				/ direction.dot(normal);
 
-		if (t > kEps) {
-			return t;
-		} else {
-			return -1.0;
+		if (t <= kEps && t < sr.getT()) {
+			Vector3d hitPoint = Vectors.plus(origin,
+					Vectors.scale(direction, t));
+
+			return new ShadeRec(true, this.getMaterial(), hitPoint, hitPoint,
+					this.normal, direction, t);
 		}
+		return sr;
 	}
 
 }
