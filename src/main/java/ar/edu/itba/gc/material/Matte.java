@@ -4,6 +4,7 @@ import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.light.Light;
 import ar.edu.itba.gc.util.RGBColor;
+import ar.edu.itba.gc.util.Ray;
 import ar.edu.itba.gc.util.ShadeRec;
 import ar.edu.itba.gc.util.Vectors;
 import ar.edu.itba.gc.world.World;
@@ -30,8 +31,17 @@ public class Matte extends Material {
 			double ndotwi = sr.getNormal().dot(wi);
 
 			if (ndotwi > 0.0) {
-				ret = RGBColor.sum(ret, RGBColor.mult(
-						RGBColor.mult(diffuseBRDF.f(sr, wo, wi), l.L()), ndotwi));
+				boolean inShadows = false;
+				if (l.castShadows()) {
+					inShadows = l.inShadow(new Ray(sr.getHitPoint(), wi), sr);
+				}
+				if (!inShadows) {
+					ret = RGBColor.sum(
+							ret,
+							RGBColor.mult(
+									RGBColor.mult(diffuseBRDF.f(sr, wo, wi),
+											l.L()), ndotwi));
+				}
 			}
 		}
 

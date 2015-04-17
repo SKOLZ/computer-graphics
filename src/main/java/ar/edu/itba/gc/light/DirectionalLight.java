@@ -3,6 +3,7 @@ package ar.edu.itba.gc.light;
 import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.util.RGBColor;
+import ar.edu.itba.gc.util.Ray;
 import ar.edu.itba.gc.util.ShadeRec;
 
 public class DirectionalLight extends Light {
@@ -22,13 +23,18 @@ public class DirectionalLight extends Light {
 	}
 
 	public DirectionalLight(Vector3d direction, RGBColor color) {
-		super(1.0, color);
+		super(true, 1.0, color);
 		this.direction = direction;
 	}
 
 	@Override
 	public Vector3d getDirection(ShadeRec sr) {
 		return direction;
+	}
+
+	@Override
+	public boolean inShadow(Ray ray, ShadeRec sr) {
+		return false;
 	}
 
 }

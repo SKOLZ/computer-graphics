@@ -37,7 +37,7 @@ public class Ray {
 	}
 	
 	public ShadeRec hit(World world) {
-		ShadeRec sr = new ShadeRec();
+		ShadeRec sr = new ShadeRec(world);
 		for (GeometricObject obj : world.objects) {
 			sr = obj.hit(sr, this.origin, this.direction);
 		}

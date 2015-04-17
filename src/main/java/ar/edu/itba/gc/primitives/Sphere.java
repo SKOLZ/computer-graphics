@@ -3,6 +3,7 @@ package ar.edu.itba.gc.primitives;
 import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.material.Material;
+import ar.edu.itba.gc.util.Ray;
 import ar.edu.itba.gc.util.ShadeRec;
 import ar.edu.itba.gc.util.Vectors;
 
@@ -55,7 +56,7 @@ public class Sphere extends GeometricObject {
 				Vector3d normal = Vectors.scale(
 						Vectors.plus(temp, Vectors.scale(direction, t)),
 						1 / radius);
-				return new ShadeRec(true, this.getMaterial(), normal, hitPoint,
+				return new ShadeRec(true, sr.getWorld(), this.getMaterial(), normal, hitPoint,
 						hitPoint, direction, t);
 			}
 			t = (-b + e) / denom;
@@ -65,11 +66,16 @@ public class Sphere extends GeometricObject {
 				Vector3d normal = Vectors.scale(
 						Vectors.plus(temp, Vectors.scale(direction, t)),
 						1 / radius);
-				return new ShadeRec(true, this.getMaterial(), normal, hitPoint,
+				return new ShadeRec(true, sr.getWorld(), this.getMaterial(), normal, hitPoint,
 						hitPoint, direction, t);
 			}
 		}
 		return sr;
+	}
+
+	@Override
+	public double shadowHit(Ray ray) {
+		return -1;
 	}
 
 }

@@ -3,6 +3,7 @@ package ar.edu.itba.gc.primitives;
 import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.material.Material;
+import ar.edu.itba.gc.util.Ray;
 import ar.edu.itba.gc.util.ShadeRec;
 import ar.edu.itba.gc.util.Vectors;
 
@@ -30,14 +31,25 @@ public class Plane extends GeometricObject {
 		double t = Vectors.sub(point, origin).dot(normal)
 				/ direction.dot(normal);
 
-		if (t <= kEps && t < sr.getT()) {
-			Vector3d hitPoint = Vectors.plus(origin,
-					Vectors.scale(direction, t));
+		if (t > kEps) {
+			if (t < sr.getT()) {
+				Vector3d hitPoint = Vectors.plus(origin,
+						Vectors.scale(direction, t));
 
-			return new ShadeRec(true, this.getMaterial(), hitPoint, hitPoint,
-					this.normal, direction, t);
+				return new ShadeRec(true, sr.getWorld(), this.getMaterial(),
+						hitPoint, hitPoint, this.normal, direction, t);
+			}
 		}
 		return sr;
+	}
+
+	@Override
+	public double shadowHit(Ray ray) {
+		double t = Vectors.sub(this.point, ray.getOrigin()).dot(this.normal)
+				/ ray.getDirection().dot(this.normal);
+		if (t > kEps)
+			return t;
+		return -1;
 	}
 
 }
