@@ -12,16 +12,17 @@ public abstract class Camera {
 	private Vector3d eye;
 	private Vector3d lookAt;
 	private Vector3d up;
+	private double exposureTime;
 
 	private Vector3d u;
 	private Vector3d v;
 	private Vector3d w;
 
 	public Camera(Vector3d eye, Vector3d lookAt) {
-		this(eye, lookAt, new Vector3d(0, 1, 0));
+		this(eye, lookAt, new Vector3d(0, 1, 0), 1.0);
 	}
 
-	public Camera(Vector3d eye, Vector3d lookAt, Vector3d up) {
+	public Camera(Vector3d eye, Vector3d lookAt, Vector3d up, double exposureTime) {
 		super();
 		this.eye = eye;
 		this.lookAt = lookAt;
@@ -29,6 +30,15 @@ public abstract class Camera {
 		this.u = new Vector3d();
 		this.v = new Vector3d();
 		this.w = new Vector3d();
+		this.exposureTime = exposureTime;
+	}
+
+	public double getExposureTime() {
+		return exposureTime;
+	}
+
+	public void setExposureTime(double exposureTime) {
+		this.exposureTime = exposureTime;
 	}
 
 	public Vector3d getEye() {

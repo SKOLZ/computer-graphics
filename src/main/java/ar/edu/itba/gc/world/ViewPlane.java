@@ -1,5 +1,7 @@
 package ar.edu.itba.gc.world;
 
+import ar.edu.itba.gc.sampler.Sampler;
+
 public class ViewPlane {
 	
 	private int horizontalRes;
@@ -8,7 +10,9 @@ public class ViewPlane {
 	private double gamma;
 	private double gammaInverse;
 	private int sampleNum;
+	private Sampler sampler;
 	
+
 	public ViewPlane() {
 		
 	}
@@ -23,7 +27,14 @@ public class ViewPlane {
 		this.gammaInverse = gammaInverse;
 	}
 	
+	public Sampler getSampler() {
+		return sampler;
+	}
 	
+	public void setSampler(Sampler s) {
+		this.sampler = s;
+		this.sampleNum = s.getSampleNum();
+	}
 
 	public int getSampleNum() {
 		return sampleNum;
@@ -31,6 +42,12 @@ public class ViewPlane {
 
 	public void setSampleNum(int sampleNum) {
 		this.sampleNum = sampleNum;
+		if (sampleNum > 1) {
+			//TODO 
+			sampler = new Sampler();
+		} else {
+			sampler = new Sampler();
+		}
 	}
 
 	public int getHorizontalRes() {

@@ -43,5 +43,9 @@ public class Ray {
 		}
 		return sr;
 	}
+
+	public void setDirection(Vector3d direction) {
+		this.direction = direction;
+	}
 	
 }

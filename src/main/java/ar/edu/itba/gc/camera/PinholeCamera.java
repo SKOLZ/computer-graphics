@@ -53,24 +53,29 @@ public class PinholeCamera extends Camera {
 
 		BufferedImage img = new BufferedImage(w.vp.getHorizontalRes(),
 				w.vp.getVerticalRes(), BufferedImage.TYPE_INT_RGB);
+		Ray ray = new Ray();
+		ray.setOrigin(getEye());
 		for (int r = 0; r < w.vp.getVerticalRes(); r++) {
 			for (int c = 0; c < w.vp.getHorizontalRes(); c++) {
 				RGBColor l = RGBColor.black();
-
-				double x = w.vp.getPixelSize()
-						* (c - (w.vp.getHorizontalRes() / 2.0 + 0.5));
-
-				double y = w.vp.getPixelSize()
-						* (r - (w.vp.getVerticalRes() / 2.0 + 0.5));
-
-				Ray ray = new Ray(getEye(), getRayDirection(new Vector2d(x, y)));
-				ShadeRec sr = ray.hit(w);
-
-				if (sr.hitsAnObject()) {
-					l = sr.getMaterial().shade(sr);
-				} else {
-					l = w.background;
+				for (int i = 0; i < w.vp.getSampleNum(); i++) {
+					Vector2d samplePoint = w.vp.getSampler().sampleUnitSquare();
+					double x = w.vp.getPixelSize()
+							* (c - (w.vp.getHorizontalRes() * 0.5) + samplePoint.x);
+					
+					double y = w.vp.getPixelSize()
+							* (r - (w.vp.getVerticalRes() * 0.5) + samplePoint.y);
+					ray.setDirection(getRayDirection(new Vector2d(x, y)));
+					ShadeRec sr = ray.hit(w);
+					
+					if (sr.hitsAnObject()) {
+						l.sum(sr.getMaterial().shade(sr));
+					} else {
+						l.sum(w.background);
+					}
 				}
+				l.divide(w.vp.getSampleNum());
+				l.mult(getExposureTime());
 				displayPixel(r, c, l, img, w.vp);
 			}
 		}

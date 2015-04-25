@@ -61,4 +61,24 @@ public class RGBColor {
 		}
 	}
 
+	public void sum(RGBColor color) {
+		this.r += color.r;
+		this.g += color.g;
+		this.b += color.b;
+	}
+
+	public void divide(int n) {
+		this.r /= n;
+		this.g /= n;
+		this.b /= n;
+		
+	}
+
+	public void mult(double n) {
+		this.r *= n;
+		this.g *= n;
+		this.b *= n;
+		
+	}
+
 }

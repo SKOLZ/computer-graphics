@@ -19,7 +19,7 @@ import ar.edu.itba.gc.material.Phong;
 import ar.edu.itba.gc.primitives.GeometricObject;
 import ar.edu.itba.gc.primitives.Plane;
 import ar.edu.itba.gc.primitives.Sphere;
-import ar.edu.itba.gc.primitives.Triangle;
+import ar.edu.itba.gc.sampler.Jittered;
 import ar.edu.itba.gc.tracer.MultipleObjectTracer;
 import ar.edu.itba.gc.tracer.Tracer;
 import ar.edu.itba.gc.util.RGBColor;
@@ -58,7 +58,9 @@ public class World {
 		vp.setVerticalRes(3000);
 		vp.setPixelSize(1.0);
 		vp.setGamma(1.0);
-
+		int sampleNum = 25;
+		vp.setSampler(new Jittered(sampleNum));
+		
 		background = RGBColor.black();
 		ambientLight = AmbientLight.white();
 
