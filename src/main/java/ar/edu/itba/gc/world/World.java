@@ -58,8 +58,8 @@ public class World {
 		vp.setVerticalRes(3000);
 		vp.setPixelSize(1.0);
 		vp.setGamma(1.0);
-		int sampleNum = 25;
-		vp.setSampler(new MultiJittered(sampleNum));
+		int sampleNum = 1;
+		vp.setSampleNum(sampleNum);
 		
 		background = RGBColor.black();
 		ambientLight = AmbientLight.white();

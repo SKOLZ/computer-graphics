@@ -14,21 +14,11 @@ public abstract class Sampler {
 	private int[] shuffledIndices;
 
 	public Sampler() {
-		this.sampleNum = 1;
-		this.numSets = 83;
-		this.count = 0;
-		this.jump = 0;
-		this.samples = new Vector2d[sampleNum * numSets];
-		setupShuffledIndices();
+		this(1, 83);
 	}
 
 	public Sampler(int sampleNum) {
-		this.sampleNum = sampleNum;
-		this.numSets = 83;
-		this.count = 0;
-		this.jump = 0;
-		this.samples = new Vector2d[sampleNum * numSets];
-		setupShuffledIndices();
+		this(sampleNum, 83);
 	}
 	
 	public Sampler(int sampleNum, int numSets) {
@@ -51,7 +41,7 @@ public abstract class Sampler {
 
 	public Vector2d sampleUnitSquare() {
 		if (count % sampleNum == 0) {
-			jump = (int) ((Math.random() % numSets) * sampleNum);
+			jump = (int) ((new Random().nextInt(32767) % numSets) * sampleNum);
 		}
 		return samples[jump
 				+ shuffledIndices[(int) (jump + count++ % sampleNum)]];
