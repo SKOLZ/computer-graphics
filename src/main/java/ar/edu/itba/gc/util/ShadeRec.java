@@ -17,16 +17,19 @@ public class ShadeRec {
 	private Vector3d direction;
 	private double t;
 	private Vector3d normal;
+	
+	private int depth;
 
 	public ShadeRec(World world) {
 		super();
 		this.hitAnObject = false;
 		this.world = world;
 		this.t = Double.MAX_VALUE;
+		this.depth = 0;
 	}
 
 	public ShadeRec(boolean hitAnObject, World world, Material material, Vector3d normal,
-			Vector3d hitPoint, Vector3d localHitPoint, Vector3d direction, double t) {
+			Vector3d hitPoint, Vector3d localHitPoint, Vector3d direction, double t, int depth) {
 		this.hitAnObject = hitAnObject;
 		this.world = world;
 		this.material = material;
@@ -35,6 +38,7 @@ public class ShadeRec {
 		this.localHitPoint = localHitPoint;
 		this.direction = direction;
 		this.t = t;
+		this.depth = depth;
 	}
 
 	public boolean hitsAnObject() {
@@ -67,6 +71,14 @@ public class ShadeRec {
 
 	public World getWorld() {
 		return world;
+	}
+	
+	public int getDepth() {
+		return depth;
+	}
+	
+	public void setDepth(int depth) {
+		this.depth = depth;
 	}
 
 }

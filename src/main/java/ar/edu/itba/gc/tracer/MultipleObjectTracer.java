@@ -11,7 +11,7 @@ public class MultipleObjectTracer extends Tracer {
 	}
 
 	@Override
-	public RGBColor traceRay(Ray ray) {
+	public RGBColor traceRay(Ray ray, int depth) {
 		return this.getWorld().background;
 	}
 

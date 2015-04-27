@@ -7,7 +7,6 @@ import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.util.RGBColor;
 import ar.edu.itba.gc.util.Ray;
-import ar.edu.itba.gc.util.ShadeRec;
 import ar.edu.itba.gc.util.Vectors;
 import ar.edu.itba.gc.world.ViewPlane;
 import ar.edu.itba.gc.world.World;
@@ -33,8 +32,8 @@ public class PinholeCamera extends Camera {
 	}
 	
 	public PinholeCamera(Vector3d eye, Vector3d lookAt, Vector3d up, double distance,
-			double zoom) {
-		super(eye, lookAt, up);
+			double zoom, double exposureTime) {
+		super(eye, lookAt, up, exposureTime);
 		this.distance = distance;
 		this.zoom = zoom;
 	}
@@ -66,13 +65,8 @@ public class PinholeCamera extends Camera {
 					double y = w.vp.getPixelSize()
 							* (r - (w.vp.getVerticalRes() * 0.5) + samplePoint.y);
 					ray.setDirection(getRayDirection(new Vector2d(x, y)));
-					ShadeRec sr = ray.hit(w);
 					
-					if (sr.hitsAnObject()) {
-						l.sum(sr.getMaterial().shade(sr));
-					} else {
-						l.sum(w.background);
-					}
+					l.sum(w.tracer.traceRay(ray, 0));
 				}
 				l.divide(w.vp.getSampleNum());
 				l.mult(getExposureTime());

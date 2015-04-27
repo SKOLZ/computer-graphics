@@ -13,21 +13,7 @@ public class ViewPlane {
 	private double gammaInverse;
 	private int sampleNum;
 	private Sampler sampler;
-	
-
-	public ViewPlane() {
-		
-	}
-	
-	public ViewPlane(int horizontalRes, int verticalRes, double pixelSize,
-			double gamma, double gammaInverse) {
-		super();
-		this.horizontalRes = horizontalRes;
-		this.verticalRes = verticalRes;
-		this.pixelSize = pixelSize;
-		this.gamma = gamma;
-		this.gammaInverse = gammaInverse;
-	}
+	private int maxDepth;
 	
 	public Sampler getSampler() {
 		return sampler;
@@ -91,6 +77,14 @@ public class ViewPlane {
 	public void setGammaInverse(double gammaInverse) {
 		this.gammaInverse = gammaInverse;
 		this.gamma = 1 / gammaInverse;
+	}
+
+	public int getMaxDepth() {
+		return maxDepth;
+	}
+
+	public void setMaxDepth(int maxDepth) {
+		this.maxDepth = maxDepth;
 	}
 
 }

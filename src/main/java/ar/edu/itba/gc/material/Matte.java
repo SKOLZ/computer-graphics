@@ -3,6 +3,7 @@ package ar.edu.itba.gc.material;
 import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.light.Light;
+import ar.edu.itba.gc.sampler.Sampler;
 import ar.edu.itba.gc.util.RGBColor;
 import ar.edu.itba.gc.util.Ray;
 import ar.edu.itba.gc.util.ShadeRec;
@@ -14,10 +15,10 @@ public class Matte extends Material {
 	private Lambertian ambientBRDF;
 	private Lambertian diffuseBRDF;
 
-	public Matte(World world, double ka, double kd, RGBColor cd) {
+	public Matte(World world, double ka, double kd, RGBColor cd, Sampler sampler) {
 		super(world);
-		this.ambientBRDF = new Lambertian(ka, cd);
-		this.diffuseBRDF = new Lambertian(kd, cd);
+		this.ambientBRDF = new Lambertian(ka, cd, sampler);
+		this.diffuseBRDF = new Lambertian(kd, cd, sampler);
 	}
 
 	@Override

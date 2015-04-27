@@ -16,12 +16,12 @@ import ar.edu.itba.gc.light.Light;
 import ar.edu.itba.gc.light.PointLight;
 import ar.edu.itba.gc.material.Matte;
 import ar.edu.itba.gc.material.Phong;
+import ar.edu.itba.gc.material.Reflective;
 import ar.edu.itba.gc.primitives.GeometricObject;
 import ar.edu.itba.gc.primitives.Plane;
 import ar.edu.itba.gc.primitives.Sphere;
-import ar.edu.itba.gc.sampler.MultiJittered;
-import ar.edu.itba.gc.tracer.MultipleObjectTracer;
 import ar.edu.itba.gc.tracer.Tracer;
+import ar.edu.itba.gc.tracer.WhittedTracer;
 import ar.edu.itba.gc.util.RGBColor;
 
 public class World {
@@ -38,7 +38,7 @@ public class World {
 		this.vp = new ViewPlane();
 		this.objects = new LinkedList<GeometricObject>();
 		this.lights = new LinkedList<Light>();
-		this.tracer = new MultipleObjectTracer(this);
+		this.tracer = new WhittedTracer(this);
 	}
 
 	public void addObject(GeometricObject obj) {
@@ -51,31 +51,34 @@ public class World {
 
 	public void build() {
 		camera = new PinholeCamera(new Vector3d(0, 300, 1000), new Vector3d(0,
-				0, 0), new Vector3d(0, 1, 0), 1000.0, 1);
+				0, 0), new Vector3d(0, 1, 0), 1000.0, 1, 1.0);
 		camera.computeUVW();
 
 		vp.setHorizontalRes(3000);
 		vp.setVerticalRes(3000);
 		vp.setPixelSize(1.0);
 		vp.setGamma(1.0);
-		int sampleNum = 1;
-		vp.setSampleNum(sampleNum);
-		
+		vp.setSampleNum(1);
+		vp.setMaxDepth(10);
+
 		background = RGBColor.black();
-		ambientLight = AmbientLight.white();
+		ambientLight = AmbientLight.black();
 
 		// this.addLight(DirectionalLight.downWhite());
 		this.addLight(new PointLight(1, new Vector3d(500, 700, 200)));
 
 		this.addObject(new Sphere(new Phong(this, 0.25, 0.75, 1, 25,
-				new RGBColor(0, 1, 0)), new Vector3d(-400.0, 150.0, 0.0), 150.0));
+				new RGBColor(0, 1, 0), vp.getSampler()), new Vector3d(-400.0,
+				150.0, 0.0), 150.0));
 		this.addObject(new Sphere(new Phong(this, 0.25, 0.75, 1, 25,
-				new RGBColor(1, 0, 0)), new Vector3d(0.0, 200.0, 0.0), 200.0));
+				new RGBColor(1, 0, 0), vp.getSampler()), new Vector3d(0.0,
+				200.0, 0.0), 200.0));
 		this.addObject(new Sphere(new Phong(this, 0.25, 0.75, 1, 25,
-				new RGBColor(0, 0, 1)), new Vector3d(220.0, 100.0, 150.0),
-				100.0));
+				new RGBColor(0, 0, 1), vp.getSampler()), new Vector3d(220.0,
+				100.0, 150.0), 100.0));
 		this.addObject(new Plane(new Matte(this, 0.25, 0.75, new RGBColor(1, 1,
-				0)), new Vector3d(0.0, 0.0, 0.0), new Vector3d(0, 1, 0)));
+				0), vp.getSampler()), new Vector3d(0.0, 0.0, 0.0),
+				new Vector3d(0, 1, 0)));
 		// this.addObject(new Triangle(new Phong(this, 0.25, 0.75, 1, 25,
 		// new RGBColor(1, 0, 0)), new Vector3d(300, 0, 300), new Vector3d(
 		// 400, 0, 100), new Vector3d(300, 200, 300)));

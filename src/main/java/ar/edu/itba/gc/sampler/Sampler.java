@@ -3,6 +3,7 @@ package ar.edu.itba.gc.sampler;
 import java.util.Random;
 
 import javax.vecmath.Vector2d;
+import javax.vecmath.Vector3d;
 
 public abstract class Sampler {
 
@@ -27,11 +28,11 @@ public abstract class Sampler {
 		this.count = 0;
 		this.jump = 0;
 		this.samples = new Vector2d[sampleNum * numSets];
+		generateSamples();
 		setupShuffledIndices();
 	}
 
 	public int getSampleNum() {
-		generateSamples();
 		return sampleNum;
 	}
 
@@ -99,5 +100,14 @@ public abstract class Sampler {
 	}
 
 	public abstract void generateSamples();
+
+	public Vector3d sampleHemisphere() {
+		// TODO MAMUUUUU
+		return null;
+	}
+
+	public void mapSamplesToHemisphere(double i) {
+		// TODO Mamuuuuuuu
+	}
 
 }
