@@ -22,6 +22,16 @@ public abstract class Camera {
 		this(eye, lookAt, new Vector3d(0, 1, 0), 1.0);
 	}
 
+	public Camera(Vector3d eye, Vector3d lookAt, Vector3d up) {
+		super();
+		this.eye = eye;
+		this.lookAt = lookAt;
+		this.up = up;
+		this.u = new Vector3d();
+		this.v = new Vector3d();
+		this.w = new Vector3d();
+	}
+	
 	public Camera(Vector3d eye, Vector3d lookAt, Vector3d up, double exposureTime) {
 		super();
 		this.eye = eye;

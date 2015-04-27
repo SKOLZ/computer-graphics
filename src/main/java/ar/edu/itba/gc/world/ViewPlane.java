@@ -1,5 +1,7 @@
 package ar.edu.itba.gc.world;
 
+import ar.edu.itba.gc.sampler.MultiJittered;
+import ar.edu.itba.gc.sampler.Regular;
 import ar.edu.itba.gc.sampler.Sampler;
 
 public class ViewPlane {
@@ -43,10 +45,9 @@ public class ViewPlane {
 	public void setSampleNum(int sampleNum) {
 		this.sampleNum = sampleNum;
 		if (sampleNum > 1) {
-			//TODO 
-			sampler = new Sampler();
+			sampler = new MultiJittered(sampleNum);
 		} else {
-			sampler = new Sampler();
+			sampler = new Regular(1);
 		}
 	}
 
