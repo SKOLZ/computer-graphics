@@ -37,7 +37,7 @@ public class Plane extends GeometricObject {
 						Vectors.scale(direction, t));
 
 				return new ShadeRec(true, sr.getWorld(), this.getMaterial(),
-						hitPoint, hitPoint, this.normal, direction, t);
+						this.normal, hitPoint, hitPoint, direction, t);
 			}
 		}
 		return sr;

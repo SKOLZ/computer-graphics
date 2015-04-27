@@ -38,9 +38,8 @@ public class Matte extends Material {
 				if (!inShadows) {
 					ret = RGBColor.sum(
 							ret,
-							RGBColor.mult(
-									RGBColor.mult(diffuseBRDF.f(sr, wo, wi),
-											l.L()), ndotwi));
+							RGBColor.mult(diffuseBRDF.f(sr, wo, wi),
+									RGBColor.mult(l.L(), ndotwi)));
 				}
 			}
 		}

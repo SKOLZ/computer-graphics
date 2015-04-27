@@ -4,6 +4,7 @@ import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.light.Light;
 import ar.edu.itba.gc.util.RGBColor;
+import ar.edu.itba.gc.util.Ray;
 import ar.edu.itba.gc.util.ShadeRec;
 import ar.edu.itba.gc.util.Vectors;
 import ar.edu.itba.gc.world.World;
@@ -33,10 +34,17 @@ public class Phong extends Matte {
 			double ndotwi = sr.getNormal().dot(wi);
 
 			if (ndotwi > 0.0) {
-				RGBColor brdfColor = RGBColor.sum(getDiffuseBRDF()
-						.f(sr, wo, wi), this.specularBRDF.f(sr, wo, wi));
-				ret = RGBColor.sum(ret,
-						RGBColor.mult(RGBColor.mult(brdfColor, l.L()), ndotwi));
+				boolean inShadows = false;
+				if (l.castShadows()) {
+					inShadows = l.inShadow(new Ray(sr.getHitPoint(), wi), sr);
+				}
+				if (!inShadows) {
+					RGBColor brdfColor = RGBColor.sum(
+							getDiffuseBRDF().f(sr, wo, wi),
+							this.specularBRDF.f(sr, wo, wi));
+					ret = RGBColor.sum(ret, RGBColor.mult(
+							RGBColor.mult(brdfColor, l.L()), ndotwi));
+				}
 			}
 		}
 

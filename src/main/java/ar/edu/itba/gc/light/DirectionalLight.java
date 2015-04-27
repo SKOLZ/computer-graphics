@@ -5,6 +5,7 @@ import javax.vecmath.Vector3d;
 import ar.edu.itba.gc.util.RGBColor;
 import ar.edu.itba.gc.util.Ray;
 import ar.edu.itba.gc.util.ShadeRec;
+import ar.edu.itba.gc.util.Vectors;
 
 public class DirectionalLight extends Light {
 
@@ -29,7 +30,7 @@ public class DirectionalLight extends Light {
 
 	@Override
 	public Vector3d getDirection(ShadeRec sr) {
-		return direction;
+		return Vectors.scale(direction, -1);
 	}
 
 	@Override

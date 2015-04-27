@@ -19,6 +19,7 @@ import ar.edu.itba.gc.material.Phong;
 import ar.edu.itba.gc.primitives.GeometricObject;
 import ar.edu.itba.gc.primitives.Plane;
 import ar.edu.itba.gc.primitives.Sphere;
+import ar.edu.itba.gc.primitives.Triangle;
 import ar.edu.itba.gc.tracer.MultipleObjectTracer;
 import ar.edu.itba.gc.tracer.Tracer;
 import ar.edu.itba.gc.util.RGBColor;
@@ -49,8 +50,8 @@ public class World {
 	}
 
 	public void build() {
-		camera = new PinholeCamera(new Vector3d(0, 0, 170), new Vector3d(0, 0,
-				0), new Vector3d(0, 1, 0), 1500.0, 1);
+		camera = new PinholeCamera(new Vector3d(0, 300, 1000), new Vector3d(0,
+				0, 0), new Vector3d(0, 1, 0), 1000.0, 1);
 		camera.computeUVW();
 
 		vp.setHorizontalRes(3000);
@@ -62,19 +63,23 @@ public class World {
 		ambientLight = AmbientLight.white();
 
 		// this.addLight(DirectionalLight.downWhite());
-		 this.addLight(new PointLight(1, new Vector3d(0, 100, -100)));
+		this.addLight(new PointLight(1, new Vector3d(500, 700, 200)));
 
-		// this.addObject(new Sphere(new Phong(this, 0.25, 0.75, 1, 25,
-		// new RGBColor(1, 0, 0)), new Vector3d(0.0, 0.0, 0.0), 85.0));
-		// this.addObject(new Sphere(new Phong(this, 0.25, 0.75, 1, 25,
-		// new RGBColor(0, 1, 0)), new Vector3d(0.0, 125.0, 0.0), 50.0));
-		// this.addObject(new Sphere(new Matte(this, 0.25, 0.75, new RGBColor(0,
-		// 0, 1)), new Vector3d(0.0, 0.0, -125.0), 50.0));
-		// this.addObject(new Plane(new Matte(this, 0.25, 0.75, new RGBColor(1,
-		// 0,
-		// 1)), new Vector3d(0.0, 0.0, 0.0), new Vector3d(0, 0, 1)));
+		this.addObject(new Sphere(new Phong(this, 0.25, 0.75, 1, 25,
+				new RGBColor(0, 1, 0)), new Vector3d(-400.0, 150.0, 0.0), 150.0));
+		this.addObject(new Sphere(new Phong(this, 0.25, 0.75, 1, 25,
+				new RGBColor(1, 0, 0)), new Vector3d(0.0, 200.0, 0.0), 200.0));
+		this.addObject(new Sphere(new Phong(this, 0.25, 0.75, 1, 25,
+				new RGBColor(0, 0, 1)), new Vector3d(220.0, 100.0, 150.0),
+				100.0));
 		this.addObject(new Plane(new Matte(this, 0.25, 0.75, new RGBColor(1, 1,
-				0)), new Vector3d(0.0, 0.0, 0.0), new Vector3d(0, 1, 1)));
+				0)), new Vector3d(0.0, 0.0, 0.0), new Vector3d(0, 1, 0)));
+		// this.addObject(new Triangle(new Phong(this, 0.25, 0.75, 1, 25,
+		// new RGBColor(1, 0, 0)), new Vector3d(300, 0, 300), new Vector3d(
+		// 400, 0, 100), new Vector3d(300, 200, 300)));
+		// this.addObject(new Plane(new Matte(this, 0.25, 0.75, new RGBColor(1,
+		// 1,
+		// 0)), new Vector3d(0.0, 0.0, -500.0), new Vector3d(0, 1, 1)));
 	}
 
 	public void renderScene() {

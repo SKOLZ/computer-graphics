@@ -75,6 +75,28 @@ public class Sphere extends GeometricObject {
 
 	@Override
 	public double shadowHit(Ray ray) {
+		double t;
+		Vector3d temp = Vectors.sub(ray.getOrigin(), center);
+		double a = ray.getDirection().dot(ray.getDirection());
+		double b = 2.0 * temp.dot(ray.getDirection());
+		double c = temp.dot(temp) - radius * radius;
+		double disc = b * b - 4.0 * a * c;
+
+		if (disc < 0.0) {
+			return -1;
+		} else {
+			double e = Math.sqrt(disc);
+			double denom = 2.0 * a;
+			t = (-b - e) / denom;
+
+			if (t > kEps) {
+				return t;
+			}
+			t = (-b + e) / denom;
+			if (t > kEps) {
+				return t;
+			}
+		}
 		return -1;
 	}
 
