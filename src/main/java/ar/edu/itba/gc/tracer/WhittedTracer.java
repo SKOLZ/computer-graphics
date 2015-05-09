@@ -19,6 +19,7 @@ public class WhittedTracer extends Tracer {
 			ShadeRec sr = ray.hit(this.getWorld());
 			if (sr.hitsAnObject()) {
 				sr.setDepth(depth);
+				sr.setDirection(ray.getDirection());
 				return sr.getMaterial().shade(sr);
 			}
 			return this.getWorld().background;

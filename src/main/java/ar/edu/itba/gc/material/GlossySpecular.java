@@ -2,6 +2,7 @@ package ar.edu.itba.gc.material;
 
 import javax.vecmath.Vector3d;
 
+import ar.edu.itba.gc.sampler.MultiJittered;
 import ar.edu.itba.gc.sampler.Sampler;
 import ar.edu.itba.gc.util.RGBColor;
 import ar.edu.itba.gc.util.ShadeRec;
@@ -62,6 +63,11 @@ class GlossySpecular extends BRDF {
 		// pdf = phong_lobe * (sr.getNormal() * wi);
 
 		return (RGBColor.mult(RGBColor.mult(cs, ks), phong_lobe));
+	}
+	
+	public void setSamples(int sampleNum, double exp) {
+		this.setSampler(new MultiJittered(sampleNum));
+		this.getSampler().mapSamplesToHemisphere(exp);
 	}
 	
 }

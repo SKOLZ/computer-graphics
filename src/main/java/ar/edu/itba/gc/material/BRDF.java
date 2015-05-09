@@ -34,5 +34,9 @@ abstract class BRDF {
 	Sampler getSampler() {
 		return this.sampler;
 	}
+
+	public void setSampler(Sampler sampler) {
+		this.sampler = sampler;
+	}
 	
 }

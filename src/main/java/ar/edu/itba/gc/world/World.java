@@ -51,7 +51,7 @@ public class World {
 
 	public void build() {
 		camera = new PinholeCamera(new Vector3d(0, 300, 1000), new Vector3d(0,
-				0, 0), new Vector3d(0, 1, 0), 1000.0, 1, 1.0);
+				0, 0), new Vector3d(0, 1, 0), 1000.0, 2, 1.0);
 		camera.computeUVW();
 
 		vp.setHorizontalRes(3000);
@@ -68,13 +68,13 @@ public class World {
 		this.addLight(new PointLight(1, new Vector3d(500, 700, 200)));
 
 		this.addObject(new Sphere(new Phong(this, 0.25, 0.75, 1, 25,
-				new RGBColor(0, 1, 0), vp.getSampler()), new Vector3d(-400.0,
+				new RGBColor(0, 0, 1), vp.getSampler()), new Vector3d(-400.0,
 				150.0, 0.0), 150.0));
-		this.addObject(new Sphere(new Phong(this, 0.25, 0.75, 1, 25,
-				new RGBColor(1, 0, 0), vp.getSampler()), new Vector3d(0.0,
+		this.addObject(new Sphere(new Reflective(this, 0.25, 0.5, 0.15, 100, 0.75, 
+				new RGBColor(1, 0, 0), vp.getSampler(), new RGBColor(1, 0, 0)), new Vector3d(0.0,
 				200.0, 0.0), 200.0));
 		this.addObject(new Sphere(new Phong(this, 0.25, 0.75, 1, 25,
-				new RGBColor(0, 0, 1), vp.getSampler()), new Vector3d(220.0,
+				new RGBColor(0, 1, 0), vp.getSampler()), new Vector3d(220.0,
 				100.0, 150.0), 100.0));
 		this.addObject(new Plane(new Matte(this, 0.25, 0.75, new RGBColor(1, 1,
 				0), vp.getSampler()), new Vector3d(0.0, 0.0, 0.0),

@@ -11,7 +11,6 @@ public class ShadeRec {
 	private Vector3d hitPoint;
 	private Vector3d localHitPoint;
 
-	// added this for lights check if used
 	private World world;
 	private Material material;
 	private Vector3d direction;
@@ -19,6 +18,7 @@ public class ShadeRec {
 	private Vector3d normal;
 	
 	private int depth;
+	
 
 	public ShadeRec(World world) {
 		super();
@@ -59,6 +59,10 @@ public class ShadeRec {
 
 	public Vector3d getDirection() {
 		return direction;
+	}
+
+	public void setDirection(Vector3d direction) {
+		this.direction = direction;
 	}
 
 	public double getT() {

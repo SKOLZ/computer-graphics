@@ -14,9 +14,9 @@ public class Reflective extends Phong {
 	private PerfectSpecular reflectiveBRDF;
 
 	public Reflective(World world, double ka, double kd, double ks, double exp,
-			double kr, RGBColor cd, Sampler sampler) {
+			double kr, RGBColor cd, Sampler sampler, RGBColor cr) {
 		super(world, ka, kd, ks, exp, cd, sampler);
-		this.reflectiveBRDF = new PerfectSpecular(kr, cd, sampler);
+		this.reflectiveBRDF = new PerfectSpecular(kr, cr, sampler);
 	}
 
 	@Override
