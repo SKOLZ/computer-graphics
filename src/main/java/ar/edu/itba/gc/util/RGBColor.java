@@ -81,4 +81,10 @@ public class RGBColor {
 		
 	}
 
+	public void divide(double n) {
+		this.r /= n;
+		this.g /= n;
+		this.b /= n;
+	}
+
 }
