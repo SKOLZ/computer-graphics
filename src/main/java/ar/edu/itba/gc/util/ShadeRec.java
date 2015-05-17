@@ -85,4 +85,12 @@ public class ShadeRec {
 		this.depth = depth;
 	}
 
+	public void setNormal(Vector3d normal) {
+		this.normal = normal;
+	}
+
+	public void setLocalHitPoint(Vector3d localHitPoint) {
+		this.localHitPoint = localHitPoint;
+	}
+
 }

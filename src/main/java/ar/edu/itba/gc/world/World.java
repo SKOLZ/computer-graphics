@@ -14,12 +14,9 @@ import ar.edu.itba.gc.camera.PinholeCamera;
 import ar.edu.itba.gc.light.AmbientLight;
 import ar.edu.itba.gc.light.Light;
 import ar.edu.itba.gc.light.PointLight;
-import ar.edu.itba.gc.material.Matte;
 import ar.edu.itba.gc.material.Phong;
-import ar.edu.itba.gc.material.Reflective;
-import ar.edu.itba.gc.material.Transparent;
 import ar.edu.itba.gc.primitives.GeometricObject;
-import ar.edu.itba.gc.primitives.Plane;
+import ar.edu.itba.gc.primitives.Instance;
 import ar.edu.itba.gc.primitives.Sphere;
 import ar.edu.itba.gc.tracer.Tracer;
 import ar.edu.itba.gc.tracer.WhittedTracer;
@@ -51,41 +48,69 @@ public class World {
 	}
 
 	public void build() {
-		camera = new PinholeCamera(new Vector3d(100, 300, 1000), new Vector3d(0,
-				0, 0), new Vector3d(0, 1, 0), 1000.0, 1.5, 1.0);
-		camera.computeUVW();
-
-		vp.setHorizontalRes(3000);
-		vp.setVerticalRes(3000);
+//		camera = new PinholeCamera(new Vector3d(100, 300, 1000), new Vector3d(0,
+//				0, 0), new Vector3d(0, 1, 0), 1000.0, 1.5, 1.0);
+//		camera.computeUVW();
+//
+//		vp.setHorizontalRes(3000);
+//		vp.setVerticalRes(3000);
 		vp.setPixelSize(1.0);
 		vp.setGamma(1.0);
 		vp.setSampleNum(1);
 		vp.setMaxDepth(10);
-
+//
 		background = RGBColor.black();
 		ambientLight = AmbientLight.black();
 
 		// this.addLight(DirectionalLight.downWhite());
-		this.addLight(new PointLight(1, new Vector3d(100, 700, 200)));
-
-		this.addObject(new Sphere(new Phong(this, 0.25, 0.75, 1, 25,
-				new RGBColor(0, 0, 1), vp.getSampler()), new Vector3d(-400.0,
-				150.0, 0.0), 150.0));
-		this.addObject(new Sphere(new Reflective(this, 0.25, 0.5, 0.15, 100, 0.75, 
-				new RGBColor(1, 0, 0), vp.getSampler(), new RGBColor(0.65, 0, 0)), new Vector3d(0.0,
-				200.0, 0.0), 200.0));
-		this.addObject(new Sphere(new Transparent(this, 0.25, 0.75, 1, 100,
-				new RGBColor(0, 0, 0), vp.getSampler(), 1.5, 0.1, 0.9, RGBColor.white()), new Vector3d(200.0,
-				100.0, 300.0), 100.0));
-		this.addObject(new Plane(new Matte(this, 0.25, 0.75, new RGBColor(1, 1,
-				0), vp.getSampler()), new Vector3d(0.0, 0.0, 0.0),
-				new Vector3d(0, 1, 0)));
+		
+		
+//		this.addLight(new PointLight(1, new Vector3d(100, 700, 200)));
+//
+//		this.addObject(new Sphere(new Phong(this, 0.25, 0.75, 1, 25,
+//				new RGBColor(0, 0, 1), vp.getSampler()), new Vector3d(-400.0,
+//				150.0, 0.0), 150.0));
+//		this.addObject(new Sphere(new Reflective(this, 0.25, 0.5, 0.15, 100, 0.75, 
+//				new RGBColor(1, 0, 0), vp.getSampler(), new RGBColor(0.65, 0, 0)), new Vector3d(0.0,
+//				200.0, 0.0), 200.0));
+//		this.addObject(new Sphere(new Transparent(this, 0.25, 0.75, 1, 100,
+//				new RGBColor(0, 0, 0), vp.getSampler(), 1.5, 0.1, 0.9, RGBColor.white()), new Vector3d(200.0,
+//				100.0, 300.0), 100.0));
+//		this.addObject(new Plane(new Matte(this, 0.25, 0.75, new RGBColor(1, 1,
+//				0), vp.getSampler()), new Vector3d(0.0, 0.0, 0.0),
+//				new Vector3d(0, 1, 0)));
+		
+		
 		// this.addObject(new Triangle(new Phong(this, 0.25, 0.75, 1, 25,
 		// new RGBColor(1, 0, 0)), new Vector3d(300, 0, 300), new Vector3d(
 		// 400, 0, 100), new Vector3d(300, 200, 300)));
 		// this.addObject(new Plane(new Matte(this, 0.25, 0.75, new RGBColor(1,
 		// 1,
 		// 0)), new Vector3d(0.0, 0.0, -500.0), new Vector3d(0, 1, 1)));
+		
+		
+		//---------- TEST DE MATRICES ---------//
+		vp.setHorizontalRes(400);
+		vp.setVerticalRes(400);
+		vp.setSampleNum(16);
+		camera = new PinholeCamera(new Vector3d(100, 0, 100), new Vector3d(0, 1, 0), 8000);
+		camera.computeUVW();
+		
+		PointLight pl = new PointLight(3.0, new Vector3d(50, 50, 1));
+		addLight(pl);
+		
+		Phong p = new Phong(this, 0.25, 0.8, 0.15, 50.0, new RGBColor(0.75), vp.getSampler());
+		
+//		Sphere s = new Sphere(p, new Vector3d(0, 0, 0), 1.0);
+//		addObject(s);
+		
+		Instance ellipsoid = new Instance(new Sphere(p, new Vector3d(0, 0, 0), 1.0));
+		ellipsoid.setMaterial(p);
+		ellipsoid.scale(2, 3, 1);
+		ellipsoid.rotateX(-45);
+		ellipsoid.translate(0, 1, 0);
+		
+		addObject(ellipsoid);
 	}
 
 	public void renderScene() {

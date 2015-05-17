@@ -28,10 +28,15 @@ public class RGBColor {
 	private double b;
 
 	public RGBColor(double r, double g, double b) {
-		super();
 		this.r = r;
 		this.g = g;
 		this.b = b;
+	}
+
+	public RGBColor(double d) {
+		this.r = d;
+		this.g = d;
+		this.b = d;
 	}
 
 	public double getR() {

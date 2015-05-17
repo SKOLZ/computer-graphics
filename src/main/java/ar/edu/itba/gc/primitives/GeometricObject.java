@@ -15,8 +15,16 @@ public abstract class GeometricObject {
 		this.material = material;
 	}
 
+	public GeometricObject() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public Material getMaterial() {
 		return material;
+	}
+
+	public void setMaterial(Material material) {
+		this.material = material;
 	}
 
 	public abstract ShadeRec hit(ShadeRec sr, Vector3d origin,
