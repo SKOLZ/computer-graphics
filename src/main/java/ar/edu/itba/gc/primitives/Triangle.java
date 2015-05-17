@@ -3,6 +3,7 @@ package ar.edu.itba.gc.primitives;
 import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.material.Material;
+import ar.edu.itba.gc.util.Constants;
 import ar.edu.itba.gc.util.Ray;
 import ar.edu.itba.gc.util.ShadeRec;
 import ar.edu.itba.gc.util.Vectors;
@@ -62,7 +63,7 @@ public class Triangle extends GeometricObject {
 		double e3 = a * p - b * r + d * s;
 		double t = e3 * inv_denom;
 
-		if (t < kEps)
+		if (t < Constants.KEPS)
 			return sr;
 
 		Vector3d hitPoint = Vectors.plus(origin, Vectors.scale(direction, t));
@@ -104,7 +105,7 @@ public class Triangle extends GeometricObject {
 		double e3 = a * p - b * r + d * s;
 		double t = e3 * inv_denom;
 
-		if (t < kEps)
+		if (t < Constants.KEPS)
 			return -1;
 
 		return t;
@@ -121,6 +122,58 @@ public class Triangle extends GeometricObject {
 				+ Math.abs(auxNormal.z);
 		this.normal = new Vector3d(auxNormal.x / sum, auxNormal.y / sum,
 				auxNormal.z / sum);
+	}
+
+	@Override
+	public BoundingBox getBoundingBox() {
+		double delta = 0.000001;
+		double x0 = Math.min(Math.min(v0.x, v1.x), v2.x) - delta;
+		double x1 = Math.max(Math.max(v0.x, v1.x), v2.x) + delta;
+		double y0 = Math.min(Math.min(v0.y, v1.y), v2.y) - delta;
+		double y1 = Math.max(Math.max(v0.y, v1.y), v2.y) + delta;
+		double z0 = Math.min(Math.min(v0.z, v1.z), v2.z) - delta;
+		double z1 = Math.max(Math.max(v0.z, v1.z), v2.z) + delta;
+		return new BoundingBox(x0, x1, y0, y1, z0, z1);
+	}
+
+	@Override
+	public Vector3d getCentroid() {
+		double x = (v0.x + v1.x + v2.x) / 3;
+		double y = (v0.y + v1.y + v2.y) / 3;
+		double z = (v0.z + v1.z + v2.z) / 3;
+		return new Vector3d(x, y, z);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Triangle other = (Triangle) obj;
+		if (normal == null) {
+			if (other.normal != null)
+				return false;
+		} else if (!normal.equals(other.normal))
+			return false;
+		if (v0 == null) {
+			if (other.v0 != null)
+				return false;
+		} else if (!v0.equals(other.v0))
+			return false;
+		if (v1 == null) {
+			if (other.v1 != null)
+				return false;
+		} else if (!v1.equals(other.v1))
+			return false;
+		if (v2 == null) {
+			if (other.v2 != null)
+				return false;
+		} else if (!v2.equals(other.v2))
+			return false;
+		return true;
 	}
 
 }

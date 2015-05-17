@@ -3,6 +3,7 @@ package ar.edu.itba.gc.primitives;
 import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.material.Material;
+import ar.edu.itba.gc.util.Constants;
 import ar.edu.itba.gc.util.Ray;
 import ar.edu.itba.gc.util.ShadeRec;
 import ar.edu.itba.gc.util.Vectors;
@@ -50,7 +51,7 @@ public class Sphere extends GeometricObject {
 			double denom = 2.0 * a;
 			t = (-b - e) / denom;
 
-			if (t > kEps && t < sr.getT()) {
+			if (t > Constants.KEPS && t < sr.getT()) {
 				Vector3d hitPoint = Vectors.plus(origin,
 						Vectors.scale(direction, t));
 				Vector3d normal = Vectors.scale(
@@ -60,7 +61,7 @@ public class Sphere extends GeometricObject {
 						normal, hitPoint, hitPoint, direction, t, sr.getDepth());
 			}
 			t = (-b + e) / denom;
-			if (t > kEps && t < sr.getT()) {
+			if (t > Constants.KEPS && t < sr.getT()) {
 				Vector3d hitPoint = Vectors.plus(origin,
 						Vectors.scale(direction, t));
 				Vector3d normal = Vectors.scale(
@@ -89,15 +90,54 @@ public class Sphere extends GeometricObject {
 			double denom = 2.0 * a;
 			t = (-b - e) / denom;
 
-			if (t > kEps) {
+			if (t > Constants.KEPS) {
 				return t;
 			}
 			t = (-b + e) / denom;
-			if (t > kEps) {
+			if (t > Constants.KEPS) {
 				return t;
 			}
 		}
 		return -1;
+	}
+
+	@Override
+	public BoundingBox getBoundingBox() {
+		double x0 = this.center.x - radius;
+		double x1 = this.center.x + radius;
+
+		double y0 = this.center.y - radius;
+		double y1 = this.center.y + radius;
+
+		double z0 = this.center.z - radius;
+		double z1 = this.center.z + radius;
+
+		return new BoundingBox(x0, x1, y0, y1, z0, z1);
+	}
+
+	@Override
+	public Vector3d getCentroid() {
+		return this.center;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Sphere other = (Sphere) obj;
+		if (center == null) {
+			if (other.center != null)
+				return false;
+		} else if (!center.equals(other.center))
+			return false;
+		if (Double.doubleToLongBits(radius) != Double
+				.doubleToLongBits(other.radius))
+			return false;
+		return true;
 	}
 
 }

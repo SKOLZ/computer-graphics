@@ -49,4 +49,37 @@ public class Rectangle extends Plane {
 		return auxSr;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Rectangle other = (Rectangle) obj;
+		if (Double.doubleToLongBits(aLengthSquared) != Double
+				.doubleToLongBits(other.aLengthSquared))
+			return false;
+		if (Double.doubleToLongBits(bLengthSquared) != Double
+				.doubleToLongBits(other.bLengthSquared))
+			return false;
+		if (corner == null) {
+			if (other.corner != null)
+				return false;
+		} else if (!corner.equals(other.corner))
+			return false;
+		if (sideA == null) {
+			if (other.sideA != null)
+				return false;
+		} else if (!sideA.equals(other.sideA))
+			return false;
+		if (sideB == null) {
+			if (other.sideB != null)
+				return false;
+		} else if (!sideB.equals(other.sideB))
+			return false;
+		return true;
+	}
+
 }

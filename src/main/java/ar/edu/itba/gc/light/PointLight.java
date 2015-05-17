@@ -40,7 +40,7 @@ public class PointLight extends Light {
 	public boolean inShadow(Ray ray, ShadeRec sr) {
 		double distance = Vectors.distance(this.location, ray.getOrigin());
 		
-		for (GeometricObject obj : sr.getWorld().objects) {
+		for (GeometricObject obj : sr.getWorld().getObjects()) {
 			double aux = obj.shadowHit(ray);
 			if (aux > 0 && aux < distance)
 				return true;

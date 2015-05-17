@@ -3,6 +3,7 @@ package ar.edu.itba.gc.primitives;
 import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.material.Material;
+import ar.edu.itba.gc.util.Constants;
 import ar.edu.itba.gc.util.Ray;
 import ar.edu.itba.gc.util.ShadeRec;
 import ar.edu.itba.gc.util.Vectors;
@@ -31,7 +32,7 @@ public class Plane extends GeometricObject {
 		double t = Vectors.sub(point, origin).dot(normal)
 				/ direction.dot(normal);
 
-		if (t > kEps) {
+		if (t > Constants.KEPS) {
 			if (t < sr.getT()) {
 				Vector3d hitPoint = Vectors.plus(origin,
 						Vectors.scale(direction, t));
@@ -48,9 +49,41 @@ public class Plane extends GeometricObject {
 	public double shadowHit(Ray ray) {
 		double t = Vectors.sub(this.point, ray.getOrigin()).dot(this.normal)
 				/ ray.getDirection().dot(this.normal);
-		if (t > kEps)
+		if (t > Constants.KEPS)
 			return t;
 		return -1;
+	}
+
+	@Override
+	public BoundingBox getBoundingBox() {
+		return BoundingBox.bigBox();
+	}
+
+	@Override
+	public Vector3d getCentroid() {
+		return this.point;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Plane other = (Plane) obj;
+		if (normal == null) {
+			if (other.normal != null)
+				return false;
+		} else if (!normal.equals(other.normal))
+			return false;
+		if (point == null) {
+			if (other.point != null)
+				return false;
+		} else if (!point.equals(other.point))
+			return false;
+		return true;
 	}
 
 }

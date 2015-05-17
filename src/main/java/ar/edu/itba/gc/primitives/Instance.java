@@ -106,5 +106,15 @@ public class Instance extends GeometricObject {
 		// DO NOTHING
 		return -1;
 	}
+
+	@Override
+	public BoundingBox getBoundingBox() {
+		return this.geometricObject.getBoundingBox();
+	}
+
+	@Override
+	public Vector3d getCentroid() {
+		return this.geometricObject.getCentroid();
+	}
 	
 }
