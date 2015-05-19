@@ -58,7 +58,7 @@ public class Sphere extends GeometricObject {
 						Vectors.plus(temp, Vectors.scale(direction, t)),
 						1 / radius);
 				return new ShadeRec(true, sr.getWorld(), this.getMaterial(),
-						normal, hitPoint, hitPoint, direction, t, sr.getDepth());
+						normal, hitPoint, hitPoint, direction, t, 0, 0, sr.getDepth());
 			}
 			t = (-b + e) / denom;
 			if (t > Constants.KEPS && t < sr.getT()) {
@@ -68,7 +68,7 @@ public class Sphere extends GeometricObject {
 						Vectors.plus(temp, Vectors.scale(direction, t)),
 						1 / radius);
 				return new ShadeRec(true, sr.getWorld(), this.getMaterial(),
-						normal, hitPoint, hitPoint, direction, t, sr.getDepth());
+						normal, hitPoint, hitPoint, direction, t, 0, 0, sr.getDepth());
 			}
 		}
 		return sr;

@@ -3,6 +3,7 @@ package ar.edu.itba.gc.material;
 import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.sampler.Sampler;
+import ar.edu.itba.gc.texture.Texture;
 import ar.edu.itba.gc.util.RGBColor;
 import ar.edu.itba.gc.util.Ray;
 import ar.edu.itba.gc.util.ShadeRec;
@@ -14,7 +15,7 @@ public class Reflective extends Phong {
 	private PerfectSpecular reflectiveBRDF;
 
 	public Reflective(World world, double ka, double kd, double ks, double exp,
-			double kr, RGBColor cd, Sampler sampler, RGBColor cr) {
+			double kr, Texture cd, Sampler sampler, RGBColor cr) {
 		super(world, ka, kd, ks, exp, cd, sampler);
 		this.reflectiveBRDF = new PerfectSpecular(kr, cr, sampler);
 	}

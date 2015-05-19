@@ -18,7 +18,7 @@ abstract class BRDF {
 		return RGBColor.black();
 	}
 	
-	RGBColor rho() {
+	RGBColor rho(ShadeRec sr) {
 		return RGBColor.black();
 	}
 	

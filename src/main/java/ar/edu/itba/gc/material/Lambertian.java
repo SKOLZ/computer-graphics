@@ -3,6 +3,7 @@ package ar.edu.itba.gc.material;
 import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.sampler.Sampler;
+import ar.edu.itba.gc.texture.Texture;
 import ar.edu.itba.gc.util.RGBColor;
 import ar.edu.itba.gc.util.ShadeRec;
 import ar.edu.itba.gc.util.Vectors;
@@ -12,9 +13,9 @@ class Lambertian extends BRDF {
 	private static double INV_PI = 0.3183098861837906715;
 	
 	private double kd;
-	private RGBColor cd;
+	private Texture cd;
 
-	Lambertian(double kd, RGBColor cd, Sampler sampler) {
+	Lambertian(double kd, Texture cd, Sampler sampler) {
 		super(sampler, 1);
 		this.kd = kd;
 		this.cd = cd;
@@ -24,18 +25,18 @@ class Lambertian extends BRDF {
 		return kd;
 	}
 
-	RGBColor getCd() {
+	Texture getCd() {
 		return cd;
 	}
 	
 	@Override
 	RGBColor f(ShadeRec sr, Vector3d wo, Vector3d wi) {
-		return RGBColor.mult(rho(), INV_PI);
+		return RGBColor.mult(rho(sr), INV_PI);
 	}
 	
 	@Override
-	RGBColor rho() {
-		return RGBColor.mult(cd, kd);
+	RGBColor rho(ShadeRec sr) {
+		return RGBColor.mult(cd.getColor(sr), kd);
 	}
 	
 	@Override
@@ -60,7 +61,7 @@ class Lambertian extends BRDF {
 		
 //		double pdf = sr.getNormal().dot(wi) * INV_PI;
 		
-		return RGBColor.mult(RGBColor.mult(cd, kd), INV_PI); 
+		return RGBColor.mult(RGBColor.mult(cd.getColor(sr), kd), INV_PI); 
 	}
 
 }

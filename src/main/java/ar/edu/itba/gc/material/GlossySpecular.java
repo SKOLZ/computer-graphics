@@ -4,6 +4,7 @@ import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.sampler.MultiJittered;
 import ar.edu.itba.gc.sampler.Sampler;
+import ar.edu.itba.gc.texture.Texture;
 import ar.edu.itba.gc.util.RGBColor;
 import ar.edu.itba.gc.util.ShadeRec;
 import ar.edu.itba.gc.util.Vectors;
@@ -11,10 +12,10 @@ import ar.edu.itba.gc.util.Vectors;
 class GlossySpecular extends BRDF {
 
 	private double ks;
-	private RGBColor cs;
+	private Texture cs;
 	private double exp;
 
-	GlossySpecular(double ks, RGBColor cs, double exp, Sampler sampler) {
+	GlossySpecular(double ks, Texture cs, double exp, Sampler sampler) {
 		super(sampler, exp);
 		this.ks = ks;
 		this.cs = cs;
@@ -29,7 +30,7 @@ class GlossySpecular extends BRDF {
 		double rdotwo = r.dot(wo);
 
 		if (rdotwo > 0.0)
-			return RGBColor.mult(RGBColor.mult(cs, ks), Math.pow(rdotwo, exp));
+			return RGBColor.mult(RGBColor.mult(cs.getColor(sr), ks), Math.pow(rdotwo, exp));
 		return super.f(sr, wo, wi);
 	}
 
@@ -62,7 +63,7 @@ class GlossySpecular extends BRDF {
 		double phong_lobe = Math.pow(r.dot(wi), exp);
 		// pdf = phong_lobe * (sr.getNormal() * wi);
 
-		return (RGBColor.mult(RGBColor.mult(cs, ks), phong_lobe));
+		return (RGBColor.mult(RGBColor.mult(cs.getColor(sr), ks), phong_lobe));
 	}
 	
 	public void setSamples(int sampleNum, double exp) {

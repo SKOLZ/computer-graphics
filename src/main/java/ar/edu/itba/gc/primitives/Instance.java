@@ -103,8 +103,7 @@ public class Instance extends GeometricObject {
 
 	@Override
 	public double shadowHit(Ray ray) {
-		// DO NOTHING
-		return -1;
+		return geometricObject.shadowHit(ray);
 	}
 
 	@Override

@@ -1,9 +1,9 @@
 package ar.edu.itba.gc.material;
 
-import javax.sound.midi.Transmitter;
 import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.sampler.Sampler;
+import ar.edu.itba.gc.texture.Texture;
 import ar.edu.itba.gc.util.RGBColor;
 import ar.edu.itba.gc.util.Ray;
 import ar.edu.itba.gc.util.ShadeRec;
@@ -20,7 +20,7 @@ public class Transparent extends Phong {
 			double kd, 
 			double ks,
 			double exp, 
-			RGBColor cd, 
+			Texture cd, 
 			Sampler sampler, 
 			double ior, 
 			double kr, 

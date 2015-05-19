@@ -69,7 +69,7 @@ public class Triangle extends GeometricObject {
 		Vector3d hitPoint = Vectors.plus(origin, Vectors.scale(direction, t));
 
 		return new ShadeRec(true, sr.getWorld(), this.getMaterial(),
-				this.normal, hitPoint, hitPoint, direction, t, sr.getDepth());
+				this.normal, hitPoint, hitPoint, direction, t, 0, 0, sr.getDepth());
 	}
 
 	@Override

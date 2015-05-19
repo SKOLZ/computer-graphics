@@ -4,6 +4,7 @@ import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.light.Light;
 import ar.edu.itba.gc.sampler.Sampler;
+import ar.edu.itba.gc.texture.Texture;
 import ar.edu.itba.gc.util.RGBColor;
 import ar.edu.itba.gc.util.Ray;
 import ar.edu.itba.gc.util.ShadeRec;
@@ -14,13 +15,13 @@ public class Phong extends Matte {
 
 	private GlossySpecular specularBRDF;
 
-	public Phong(World world, double ka, double kd, double ks, RGBColor cd,
+	public Phong(World world, double ka, double kd, double ks, Texture cd,
 			Sampler sampler) {
 		this(world, ka, kd, ks, 1, cd, sampler);
 	}
 
 	public Phong(World world, double ka, double kd, double ks, double exp,
-			RGBColor cd, Sampler sampler) {
+			Texture cd, Sampler sampler) {
 		super(world, ka, kd, cd, sampler);
 		this.specularBRDF = new GlossySpecular(ks, cd, exp, sampler);
 	}
@@ -28,7 +29,7 @@ public class Phong extends Matte {
 	@Override
 	public RGBColor shade(ShadeRec sr) {
 		Vector3d wo = Vectors.scale(sr.getDirection(), -1);
-		RGBColor ret = RGBColor.mult(getAmbientBRDF().rho(),
+		RGBColor ret = RGBColor.mult(getAmbientBRDF().rho(sr),
 				getWorld().ambientLight.L());
 
 		for (Light l : getWorld().lights) {
