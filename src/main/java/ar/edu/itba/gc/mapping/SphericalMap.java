@@ -11,7 +11,6 @@ public class SphericalMap extends Mapping {
 	public Point2d getTexelCoordinates(Vector3d localHitPoint, int hres, int vres) {
 		double theta = Math.acos(localHitPoint.y);
 		double phi = Math.atan2(localHitPoint.x, localHitPoint.z);
-		System.out.println(localHitPoint.x * localHitPoint.x + localHitPoint.y * localHitPoint.y + localHitPoint.z * localHitPoint.z);
 		if (phi < 0) {
 			phi += World.TWO_PI;
 		}

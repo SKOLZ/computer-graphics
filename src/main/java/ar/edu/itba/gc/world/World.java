@@ -18,13 +18,12 @@ import ar.edu.itba.gc.mapping.RectangularMap;
 import ar.edu.itba.gc.mapping.SphericalMap;
 import ar.edu.itba.gc.material.Matte;
 import ar.edu.itba.gc.material.Phong;
-import ar.edu.itba.gc.material.Reflective;
-import ar.edu.itba.gc.material.Transparent;
 import ar.edu.itba.gc.primitives.GeometricObject;
+import ar.edu.itba.gc.primitives.Instance;
 import ar.edu.itba.gc.primitives.Plane;
 import ar.edu.itba.gc.primitives.Sphere;
-import ar.edu.itba.gc.texture.ConstantColor;
 import ar.edu.itba.gc.texture.ImageTexture;
+import ar.edu.itba.gc.texture.chessTexture;
 import ar.edu.itba.gc.tracer.Tracer;
 import ar.edu.itba.gc.tracer.WhittedTracer;
 import ar.edu.itba.gc.util.KDNode;
@@ -76,7 +75,7 @@ public class World {
 		background = RGBColor.black();
 		ambientLight = AmbientLight.white();
 
-//		 this.addLight(DirectionalLight.downWhite());
+		// this.addLight(DirectionalLight.downWhite());
 
 		this.addLight(new PointLight(1, new Vector3d(100, 700, 200)));
 
@@ -118,15 +117,23 @@ public class World {
 		// 0, 1, 1), vp.getSampler()), new Vector3d(0, 0, 0),
 		// new Vector3d(100, 100, 25), new Vector3d(30, 20, 30)));
 
-		File f = new File("chess.jpg");
+		File f = new File("world.png");
 		BufferedImage img;
 		try {
 			img = ImageIO.read(f);
-			this.addObject(new Sphere(new Phong(this, 0.25, 0.75, 1, 25,
-					new ImageTexture(img.getWidth(), img.getHeight(), img, new SphericalMap()), vp.getSampler()),
-					new Vector3d(0.0, 250.0, 0.0), 250.0));
-			this.addObject(new Plane(new Matte(this, 0.25, 0.75, new ConstantColor(new RGBColor(0,1,0)), vp.getSampler()), new Vector3d(0.0,
-					0.0, 0.0), new Vector3d(0, 1, 0)));
+			Instance sphere = new Instance(new Sphere(new Phong(this, 0.25,
+					0.75, 1, 25, new ImageTexture(img.getWidth(), img.getHeight(), img,
+							new SphericalMap()),
+					vp.getSampler()), new Vector3d(0, 0, 0), 1.0));
+			sphere.scale(300, 300, 300);
+			sphere.translate(0, 300, 0);
+			addObject(sphere);
+
+			Instance plane = new Instance(new Plane(new Matte(this, 0.25, 0.75,
+					new chessTexture(new RectangularMap()), vp.getSampler()),
+					new Vector3d(0.0, 0.0, 0.0), new Vector3d(0, 1, 0)));
+			addObject(plane);
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

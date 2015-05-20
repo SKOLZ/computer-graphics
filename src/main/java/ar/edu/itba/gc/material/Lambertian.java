@@ -7,11 +7,10 @@ import ar.edu.itba.gc.texture.Texture;
 import ar.edu.itba.gc.util.RGBColor;
 import ar.edu.itba.gc.util.ShadeRec;
 import ar.edu.itba.gc.util.Vectors;
+import ar.edu.itba.gc.world.World;
 
 class Lambertian extends BRDF {
 
-	private static double INV_PI = 0.3183098861837906715;
-	
 	private double kd;
 	private Texture cd;
 
@@ -31,7 +30,7 @@ class Lambertian extends BRDF {
 	
 	@Override
 	RGBColor f(ShadeRec sr, Vector3d wo, Vector3d wi) {
-		return RGBColor.mult(rho(sr), INV_PI);
+		return RGBColor.mult(rho(sr), World.INV_PI);
 	}
 	
 	@Override
@@ -49,7 +48,7 @@ class Lambertian extends BRDF {
 		Vector3d u = new Vector3d();
 		u.cross(v, w);
 		
-		Vector3d sp = this.getSampler().sampleHemisphere();  
+		Vector3d sp = this.getSampler().sampleHemisphere();
 		Vector3d auxWi = Vectors.plus(
 				Vectors.plus(Vectors.scale(u, sp.x), Vectors.scale(v, sp.y)),
 				Vectors.scale(w, sp.z));
@@ -61,7 +60,7 @@ class Lambertian extends BRDF {
 		
 //		double pdf = sr.getNormal().dot(wi) * INV_PI;
 		
-		return RGBColor.mult(RGBColor.mult(cd.getColor(sr), kd), INV_PI); 
+		return RGBColor.mult(RGBColor.mult(cd.getColor(sr), kd), World.INV_PI); 
 	}
 
 }

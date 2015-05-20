@@ -25,8 +25,7 @@ public class Instance extends GeometricObject {
 		super();
 		this.geometricObject = geometricObject;
 		this.matrix = Matrixes.newIdenty4d();
-		this.invMatrix = Matrixes.inverse(matrix);
-		this.invTransMatrix = Matrixes.transpose(invMatrix);
+		updateMatrixes();
 		
 	}
 	
@@ -34,9 +33,7 @@ public class Instance extends GeometricObject {
 		super();
 		this.geometricObject = geometricObject;
 		this.matrix = matrix;
-		this.invMatrix = Matrixes.inverse(matrix);
-		this.invTransMatrix = Matrixes.transpose(invMatrix);
-		
+		updateMatrixes();
 	}
 	
 	@Override
@@ -51,54 +48,69 @@ public class Instance extends GeometricObject {
 			if (geometricObject.getMaterial() != null) {
 				setMaterial(geometricObject.getMaterial());
 			}		
-			if (!isTextureTransformed) {
-				newSr.setLocalHitPoint(Vectors.plus(origin, Vectors.scale(direction, newSr.getT())));
-			}
+//			if (!isTextureTransformed) {
+//				newSr.setLocalHitPoint(Vectors.plus(origin, Vectors.scale(direction, newSr.getT())));
+//			}
 		}
 		return newSr;
 	}
 	
 	public void translate(double dx, double dy, double dz) {
-		Matrix4d invTranslationMatrix = Matrixes.newIdenty4d();
-		invTranslationMatrix.m03 = -dx;
-		invTranslationMatrix.m13 = -dy;
-		invTranslationMatrix.m23 = -dz;
-		invMatrix.mul(invTranslationMatrix);
+		Matrix4d translationMatrix = Matrixes.newIdenty4d();
+		translationMatrix.m03 = dx;
+		translationMatrix.m13 = dy;
+		translationMatrix.m23 = dz;
+		translationMatrix.mul(matrix);
+		matrix = translationMatrix;
+		updateMatrixes();
 	}
 	
 	public void scale(double a, double b, double c) {
-		Matrix4d invScaleMatrix = Matrixes.newIdenty4d();
-		invScaleMatrix.m00 = 1 / a;
-		invScaleMatrix.m11 = 1 / b;
-		invScaleMatrix.m22 = 1 / c;
-		invMatrix.mul(invScaleMatrix);
+		Matrix4d scaleMatrix = Matrixes.newIdenty4d();
+		scaleMatrix.m00 = a;
+		scaleMatrix.m11 = b;
+		scaleMatrix.m22 = c;
+		scaleMatrix.mul(matrix);
+		matrix = scaleMatrix;
+		updateMatrixes();
 	}
 	
 	public void rotateX(double degrees) {
-		Matrix4d invRotationXMatrix = Matrixes.newIdenty4d();
-		invRotationXMatrix.m11 = Math.cos(Math.toRadians(degrees));
-		invRotationXMatrix.m12 = Math.sin(Math.toRadians(degrees));
-		invRotationXMatrix.m21 = -Math.sin(Math.toRadians(degrees));
-		invRotationXMatrix.m22 = Math.cos(Math.toRadians(degrees));
-		invMatrix.mul(invRotationXMatrix);
+		Matrix4d rotationXMatrix = Matrixes.newIdenty4d();
+		rotationXMatrix.m11 = Math.cos(Math.toRadians(degrees));
+		rotationXMatrix.m12 = -Math.sin(Math.toRadians(degrees));
+		rotationXMatrix.m21 = Math.sin(Math.toRadians(degrees));
+		rotationXMatrix.m22 = Math.cos(Math.toRadians(degrees));
+		rotationXMatrix.mul(matrix);
+		matrix = rotationXMatrix;
+		updateMatrixes();
 	}
 	
 	public void rotateY(double degrees) {
-		Matrix4d invRotationXMatrix = Matrixes.newIdenty4d();
-		invRotationXMatrix.m00 = Math.cos(Math.toRadians(degrees));
-		invRotationXMatrix.m02 = -Math.sin(Math.toRadians(degrees));
-		invRotationXMatrix.m20 = Math.sin(Math.toRadians(degrees));
-		invRotationXMatrix.m22 = Math.cos(Math.toRadians(degrees));
-		invMatrix.mul(invRotationXMatrix);
+		Matrix4d rotationYMatrix = Matrixes.newIdenty4d();
+		rotationYMatrix.m00 = Math.cos(Math.toRadians(degrees));
+		rotationYMatrix.m02 = Math.sin(Math.toRadians(degrees));
+		rotationYMatrix.m20 = -Math.sin(Math.toRadians(degrees));
+		rotationYMatrix.m22 = Math.cos(Math.toRadians(degrees));
+		rotationYMatrix.mul(matrix);
+		matrix = rotationYMatrix;
+		updateMatrixes();
 	}
 	
 	public void rotateZ(double degrees) {
-		Matrix4d invRotationXMatrix = Matrixes.newIdenty4d();
-		invRotationXMatrix.m00 = Math.cos(Math.toRadians(degrees));
-		invRotationXMatrix.m01 = Math.sin(Math.toRadians(degrees));
-		invRotationXMatrix.m10 = -Math.sin(Math.toRadians(degrees));
-		invRotationXMatrix.m11 = Math.cos(Math.toRadians(degrees));
-		invMatrix.mul(invRotationXMatrix);
+		Matrix4d rotationZMatrix = Matrixes.newIdenty4d();
+		rotationZMatrix.m00 = Math.cos(Math.toRadians(degrees));
+		rotationZMatrix.m01 = -Math.sin(Math.toRadians(degrees));
+		rotationZMatrix.m10 = Math.sin(Math.toRadians(degrees));
+		rotationZMatrix.m11 = Math.cos(Math.toRadians(degrees));
+		rotationZMatrix.mul(matrix);
+		matrix = rotationZMatrix;
+		updateMatrixes();
+	}
+	
+	private void updateMatrixes() {
+		this.invMatrix = Matrixes.inverse(matrix);
+		this.invTransMatrix = Matrixes.transpose(invMatrix);
 	}
 
 	@Override
