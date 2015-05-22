@@ -18,6 +18,12 @@ public class Sphere extends GeometricObject {
 		this.center = center;
 		this.radius = radius;
 	}
+	
+	public Sphere(Material material) {
+		super(material);
+		this.center = new Vector3d(0, 0, 0);
+		this.radius = 1.0;
+	}
 
 	public Vector3d getCenter() {
 		return center;

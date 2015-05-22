@@ -22,6 +22,7 @@ import ar.edu.itba.gc.primitives.GeometricObject;
 import ar.edu.itba.gc.primitives.Instance;
 import ar.edu.itba.gc.primitives.Plane;
 import ar.edu.itba.gc.primitives.Sphere;
+import ar.edu.itba.gc.texture.ConstantColor;
 import ar.edu.itba.gc.texture.ImageTexture;
 import ar.edu.itba.gc.texture.chessTexture;
 import ar.edu.itba.gc.tracer.Tracer;
@@ -62,18 +63,18 @@ public class World {
 	}
 
 	public void build() {
-		camera = new PinholeCamera(new Vector3d(100, 300, 1000), new Vector3d(
+		camera = new PinholeCamera(new Vector3d(0, 300, 1000), new Vector3d(
 				0, 0, 0), new Vector3d(0, 1, 0), 1000.0, 1.5, 1.0);
 		camera.computeUVW();
 
-		vp.setHorizontalRes(3000);
-		vp.setVerticalRes(3000);
+		vp.setHorizontalRes(1000);
+		vp.setVerticalRes(1000);
 		vp.setPixelSize(1.0);
 		vp.setGamma(1.0);
 		vp.setSampleNum(1);
 		vp.setMaxDepth(10);
 		background = RGBColor.black();
-		ambientLight = AmbientLight.white();
+		ambientLight = AmbientLight.black();
 
 		// this.addLight(DirectionalLight.downWhite());
 
@@ -117,21 +118,34 @@ public class World {
 		// 0, 1, 1), vp.getSampler()), new Vector3d(0, 0, 0),
 		// new Vector3d(100, 100, 25), new Vector3d(30, 20, 30)));
 
+		 this.addLight(new PointLight(1, new Vector3d(0, 800, 800)));
+//
 		File f = new File("world.png");
 		BufferedImage img;
 		try {
 			img = ImageIO.read(f);
-			Instance sphere = new Instance(new Sphere(new Phong(this, 0.25,
-					0.75, 1, 25, new ImageTexture(img.getWidth(), img.getHeight(), img,
-							new SphericalMap()),
-					vp.getSampler()), new Vector3d(0, 0, 0), 1.0));
-			sphere.scale(300, 300, 300);
-			sphere.translate(0, 300, 0);
+//			Instance sphere = new Instance(new Sphere(new Phong(this, 0.25,
+//					0.75, 1, 25, new ImageTexture(img.getWidth(), img.getHeight(), img, new SphericalMap()),
+//					vp.getSampler())));
+//			sphere.scale(100, 100, 100);
+//			sphere.rotateY(250);
+//			sphere.translate(0, 100, 0);
+//			addObject(sphere);
+			
+			Sphere s = new Sphere(new Matte(this, 0.25, 0.75, new ConstantColor(new RGBColor(0,1,0)), vp.getSampler()), new Vector3d(0, 0, 0), 1.0);
+			
+			Instance sphere = new Instance(s);
+			sphere.scale(100, 100, 100);
+			sphere.rotateY(250);
+			sphere.translate(0, 100, 0);
 			addObject(sphere);
+			
+//			addObject(new Sphere(new Matte(this, 0.25, 0.75, new ConstantColor(new RGBColor(0,1,0)), vp.getSampler()), new Vector3d(0, 100, 0), 100.0));
 
 			Instance plane = new Instance(new Plane(new Matte(this, 0.25, 0.75,
 					new chessTexture(new RectangularMap()), vp.getSampler()),
 					new Vector3d(0.0, 0.0, 0.0), new Vector3d(0, 1, 0)));
+			plane.rotateY(45);
 			addObject(plane);
 
 		} catch (IOException e) {
@@ -142,6 +156,19 @@ public class World {
 		// Phong p = new Phong(this, 0.25, 0.8, 0.15, 50.0, new
 		// ConstantColor(new RGBColor(0.75)), vp.getSampler());
 
+		
+		 
+		//trasparency test 
+		 
+//		addObject(new Plane(new Matte(this, 0.25, 0.75,
+//					new ConstantColor(new RGBColor(1,0,0)), vp.getSampler()),
+//					new Vector3d(0.0, 0.0, 0.0), new Vector3d(0, 1, 0)));
+//
+//		addObject(new Sphere(new Transparent(this, 0.25,
+//				0.75, 1, 25, new ConstantColor(new RGBColor(1,0,0)),
+//				vp.getSampler(), 1, 0.2, 0.8, new RGBColor(0.65)), new Vector3d(0, 300, 0), 300.0));
+//		
+//		addObject(new Sphere(new Matte(this, 0.25, 0.75, new ConstantColor(new RGBColor(0,1,0)), vp.getSampler()), new Vector3d(200, 100, 500), 100.0));
 	}
 
 	public void renderScene() {

@@ -1,13 +1,14 @@
 package ar.edu.itba.gc.primitives;
 
 import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+import javax.vecmath.Vector4d;
 
 import ar.edu.itba.gc.material.Material;
 import ar.edu.itba.gc.util.Matrixes;
 import ar.edu.itba.gc.util.Ray;
 import ar.edu.itba.gc.util.ShadeRec;
-import ar.edu.itba.gc.util.Vectors;
 
 public class Instance extends GeometricObject {
 
@@ -39,7 +40,7 @@ public class Instance extends GeometricObject {
 	@Override
 	public ShadeRec hit(ShadeRec sr, Vector3d origin, Vector3d direction) {
 		Ray invRay = new Ray(origin, direction);
-		invRay.setOrigin(Matrixes.matrixMultVector(invMatrix, origin));
+		invRay.setOrigin(Matrixes.matrixMultPoint(invMatrix, origin));
 		invRay.setDirection(Matrixes.matrixMultVector(invMatrix, direction));
 		ShadeRec newSr = geometricObject.hit(sr, invRay.getOrigin(), invRay.getDirection());
 		if (newSr.hitsAnObject()) {
@@ -115,7 +116,10 @@ public class Instance extends GeometricObject {
 
 	@Override
 	public double shadowHit(Ray ray) {
-		return geometricObject.shadowHit(ray);
+		Ray invRay = new Ray(ray.getOrigin(), ray.getDirection());
+		invRay.setOrigin(Matrixes.matrixMultPoint(invMatrix, ray.getOrigin()));
+		invRay.setDirection(Matrixes.matrixMultVector(invMatrix, ray.getDirection()));
+		return geometricObject.shadowHit(invRay);
 	}
 
 	@Override

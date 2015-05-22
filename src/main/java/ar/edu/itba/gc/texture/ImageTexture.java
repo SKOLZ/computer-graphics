@@ -37,7 +37,7 @@ public class ImageTexture extends Texture {
 			r = (int)(sr.getV() * (vres -1));
 			c = (int)(sr.getU() * (hres -1));
 		}
-		Color color = new Color(image.getRGB(c, r));
+		Color color = new Color(image.getRGB(c, vres-1-r));
 		return new RGBColor(color.getRed(), color.getGreen(), color.getBlue());
 	}
 
