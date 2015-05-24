@@ -9,8 +9,20 @@ import ar.edu.itba.gc.primitives.BoundingBox;
 import ar.edu.itba.gc.primitives.GeometricObject;
 
 public class KDNode<T extends GeometricObject> {
+	
+	public int count;
 
 	public static <T extends GeometricObject> KDNode<T> build(List<T> objs) {
+		long start = System.currentTimeMillis();
+
+		KDNode<T> node = buildInternal(objs);
+
+		System.out.println("Tree build time: " + (System.currentTimeMillis() - start) + "ms");
+		return node;
+	}
+
+	private static <T extends GeometricObject> KDNode<T> buildInternal(
+			List<T> objs) {
 		KDNode<T> node = new KDNode<T>();
 		node.objs = objs;
 		node.left = null;
@@ -81,13 +93,12 @@ public class KDNode<T extends GeometricObject> {
 		}
 		if (((float) matches / leftObjs.size() < 0.5)
 				&& ((float) matches / rightObjs.size() < 0.5)) {
-			node.left = KDNode.build(leftObjs);
-			node.right = KDNode.build(rightObjs);
+			node.left = KDNode.buildInternal(leftObjs);
+			node.right = KDNode.buildInternal(rightObjs);
 		} else {
 			node.left = new KDNode<T>();
 			node.right = new KDNode<T>();
 		}
-
 		return node;
 	}
 
@@ -101,25 +112,29 @@ public class KDNode<T extends GeometricObject> {
 		this.objs = new LinkedList<T>();
 	}
 
-	public ShadeRec hit(Ray ray, ShadeRec sr) {
-		if (this.bbox.hit(ray)) {
+	public ShadeRec hit(ShadeRec sr, Vector3d origin, Vector3d direction) {
+		if (this.bbox.hit(origin, direction)) {
 			if (!this.left.objs.isEmpty() || !this.right.objs.isEmpty()) {
-				ShadeRec srLeft = this.left.hit(ray, sr);
-				ShadeRec srRight = this.right.hit(ray, sr);
-				if (srLeft.hitsAnObject()) {
-					if (srRight.hitsAnObject()
-							&& srRight.getT() < srLeft.getT()) {
-						return srRight;
-					}
+				ShadeRec srLeft = this.left.hit(sr, origin, direction);
+				if (srLeft.hitsAnObject())
 					return srLeft;
-				} else if (srRight.hitsAnObject()) {
+				ShadeRec srRight = this.right.hit(sr, origin, direction);
+				if (srRight.hitsAnObject())
 					return srRight;
-				}
+//				if (srLeft.hitsAnObject()) {
+//					if (srRight.hitsAnObject()
+//							&& srRight.getT() < srLeft.getT()) {
+//						return srRight;
+//					}
+//					return srLeft;
+//				} else if (srRight.hitsAnObject()) {
+//					return srRight;
+//				}
 			} else {
 				boolean hits = false;
 				ShadeRec objSr = sr;
 				for (T obj : this.objs) {
-					objSr = obj.hit(objSr, ray.getOrigin(), ray.getDirection());
+					objSr = obj.hit(objSr, origin, direction);
 					if (objSr.hitsAnObject()) {
 						hits = true;
 					}
@@ -131,7 +146,7 @@ public class KDNode<T extends GeometricObject> {
 		}
 		return sr;
 	}
-	
+
 	public List<T> getObjects() {
 		return this.objs;
 	}

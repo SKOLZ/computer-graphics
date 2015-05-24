@@ -43,6 +43,7 @@ public class Sphere extends GeometricObject {
 
 	@Override
 	public ShadeRec hit(ShadeRec sr, Vector3d origin, Vector3d direction) {
+		count++;
 		double t;
 		Vector3d temp = Vectors.sub(origin, center);
 		double a = direction.dot(direction);

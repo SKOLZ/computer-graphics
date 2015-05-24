@@ -4,7 +4,6 @@ import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.util.Axis;
 import ar.edu.itba.gc.util.Constants;
-import ar.edu.itba.gc.util.Ray;
 
 public class BoundingBox {
 
@@ -37,13 +36,13 @@ public class BoundingBox {
 		this.z1 = z1;
 	}
 
-	public boolean hit(Ray ray) {
-		double ox = ray.getOrigin().x;
-		double oy = ray.getOrigin().y;
-		double oz = ray.getOrigin().z;
-		double dx = ray.getDirection().x;
-		double dy = ray.getDirection().y;
-		double dz = ray.getDirection().z;
+	public boolean hit(Vector3d origin, Vector3d direction) {
+		double ox = origin.x;
+		double oy = origin.y;
+		double oz = origin.z;
+		double dx = direction.x;
+		double dy = direction.y;
+		double dz = direction.z;
 
 		double tx_min, ty_min, tz_min;
 		double tx_max, ty_max, tz_max;

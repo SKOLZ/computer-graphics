@@ -1,18 +1,20 @@
 package ar.edu.itba.gc.primitives;
 
 import javax.vecmath.Matrix4d;
-import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector4d;
 
 import ar.edu.itba.gc.material.Material;
+import ar.edu.itba.gc.util.KDNode;
 import ar.edu.itba.gc.util.Matrixes;
 import ar.edu.itba.gc.util.Ray;
 import ar.edu.itba.gc.util.ShadeRec;
 
+import com.google.common.collect.Lists;
+
 public class Instance extends GeometricObject {
 
 	private GeometricObject geometricObject;
+	private KDNode<GeometricObject> tree;
 	private Matrix4d invMatrix;
 	private Matrix4d invTransMatrix;
 	private Matrix4d matrix;
@@ -25,6 +27,7 @@ public class Instance extends GeometricObject {
 	public Instance(GeometricObject geometricObject) {
 		super();
 		this.geometricObject = geometricObject;
+		this.tree = KDNode.build(Lists.newArrayList(geometricObject));
 		this.matrix = Matrixes.newIdenty4d();
 		updateMatrixes();
 		
@@ -43,6 +46,7 @@ public class Instance extends GeometricObject {
 		invRay.setOrigin(Matrixes.matrixMultPoint(invMatrix, origin));
 		invRay.setDirection(Matrixes.matrixMultVector(invMatrix, direction));
 		ShadeRec newSr = geometricObject.hit(sr, invRay.getOrigin(), invRay.getDirection());
+//		ShadeRec newSr = tree.hit(sr, invRay.getOrigin(), invRay.getDirection());
 		if (newSr.hitsAnObject()) {
 			newSr.setNormal(Matrixes.matrixMultVector(invTransMatrix, newSr.getNormal()));
 			newSr.getNormal().normalize();

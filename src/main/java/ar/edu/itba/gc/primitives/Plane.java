@@ -29,6 +29,7 @@ public class Plane extends GeometricObject {
 
 	@Override
 	public ShadeRec hit(ShadeRec sr, Vector3d origin, Vector3d direction) {
+		count++;
 		double t = Vectors.sub(point, origin).dot(normal)
 				/ direction.dot(normal);
 

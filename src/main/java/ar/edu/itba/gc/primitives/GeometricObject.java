@@ -8,6 +8,7 @@ import ar.edu.itba.gc.util.ShadeRec;
 
 public abstract class GeometricObject {
 
+	public int count;
 	private Material material;
 
 	public GeometricObject(Material material) {
