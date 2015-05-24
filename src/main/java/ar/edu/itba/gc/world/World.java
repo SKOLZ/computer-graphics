@@ -78,7 +78,7 @@ public class World {
 
 		// this.addLight(DirectionalLight.downWhite());
 
-		this.addLight(new PointLight(1, new Vector3d(100, 700, 200)));
+//		this.addLight(new PointLight(1, new Vector3d(100, 700, 200)));
 
 //		List<GeometricObject> objs = new LinkedList<GeometricObject>();
 
@@ -132,12 +132,14 @@ public class World {
 //			sphere.translate(0, 100, 0);
 //			addObject(sphere);
 			
-			Sphere s = new Sphere(new Matte(this, 0.25, 0.75, new ConstantColor(new RGBColor(0,1,0)), vp.getSampler()), new Vector3d(0, 0, 0), 1.0);
+			Phong p = new Phong(this, 0.25, 0.8, 0.15, 50.0, new
+					ConstantColor(new RGBColor(0,1,0)), vp.getSampler());
+			Sphere s = new Sphere(p);
 			
 			Instance sphere = new Instance(s);
 			sphere.scale(100, 100, 100);
 			sphere.rotateY(250);
-			sphere.translate(0, 100, 0);
+			sphere.translate(0, 0, -400);
 			addObject(sphere);
 			
 //			addObject(new Sphere(new Matte(this, 0.25, 0.75, new ConstantColor(new RGBColor(0,1,0)), vp.getSampler()), new Vector3d(0, 100, 0), 100.0));
@@ -153,8 +155,6 @@ public class World {
 			e.printStackTrace();
 		}
 
-		// Phong p = new Phong(this, 0.25, 0.8, 0.15, 50.0, new
-		// ConstantColor(new RGBColor(0.75)), vp.getSampler());
 
 		
 		 
@@ -182,7 +182,7 @@ public class World {
 	}
 
 	public List<GeometricObject> getObjects() {
-		return this.tree.getObjects();
+		return this.objects;
 	}
 
 }
