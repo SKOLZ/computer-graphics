@@ -3,6 +3,7 @@ package ar.edu.itba.gc.parser.global;
 import java.util.List;
 
 import ar.edu.itba.gc.parser.global.builder.CameraBuilder;
+import ar.edu.itba.gc.parser.global.builder.FilmBuilder;
 
 import com.google.common.collect.Lists;
 
@@ -48,6 +49,8 @@ public class Identifier {
 		switch (name) {
 		case "Camera":
 			new CameraBuilder(attributes, transformation).build();
+		case "Film":
+			new FilmBuilder(attributes).build();
 		default:
 			break;
 		}
