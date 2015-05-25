@@ -6,7 +6,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		long start = System.currentTimeMillis();
-		World w = new World();
+		World w = World.getInstance();
 		w.build();
 		w.renderScene();
 		System.out.println("Total time: " + (System.currentTimeMillis() - start) + "ms");

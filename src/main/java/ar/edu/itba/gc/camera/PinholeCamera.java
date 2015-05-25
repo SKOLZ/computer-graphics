@@ -19,9 +19,14 @@ public class PinholeCamera extends Camera {
 	public PinholeCamera(Vector3d eye, Vector3d lookAt) {
 		this(eye, lookAt, 500.0, 1.0);
 	}
-	
+
 	public PinholeCamera(Vector3d eye, Vector3d lookAt, double distance) {
 		this(eye, lookAt, distance, 1.0);
+	}
+
+	public PinholeCamera(Vector3d eye, Vector3d lookAt, Vector3d up,
+			double distance) {
+		this(eye, lookAt, up, distance, 1.0, 1.0);
 	}
 
 	public PinholeCamera(Vector3d eye, Vector3d lookAt, double distance,
@@ -30,9 +35,9 @@ public class PinholeCamera extends Camera {
 		this.distance = distance;
 		this.zoom = zoom;
 	}
-	
-	public PinholeCamera(Vector3d eye, Vector3d lookAt, Vector3d up, double distance,
-			double zoom, double exposureTime) {
+
+	public PinholeCamera(Vector3d eye, Vector3d lookAt, Vector3d up,
+			double distance, double zoom, double exposureTime) {
 		super(eye, lookAt, up, exposureTime);
 		this.distance = distance;
 		this.zoom = zoom;
@@ -61,11 +66,11 @@ public class PinholeCamera extends Camera {
 					Vector2d samplePoint = w.vp.getSampler().sampleUnitSquare();
 					double x = w.vp.getPixelSize()
 							* (c - (w.vp.getHorizontalRes() * 0.5) + samplePoint.x);
-					
+
 					double y = w.vp.getPixelSize()
 							* (r - (w.vp.getVerticalRes() * 0.5) + samplePoint.y);
 					ray.setDirection(getRayDirection(new Vector2d(x, y)));
-					
+
 					l.sum(w.tracer.traceRay(ray, 0));
 				}
 				l.divide(w.vp.getSampleNum());

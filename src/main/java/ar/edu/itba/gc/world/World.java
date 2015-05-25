@@ -33,6 +33,14 @@ import ar.edu.itba.gc.util.RGBColor;
 
 public class World {
 
+	private static World instance;
+	
+	public static World getInstance() {
+		if (instance == null)
+			instance = new World();
+		return instance;
+	}
+	
 	public static final double PI = 3.1415926535897932384;
 	public static final double INV_PI = 0.3183098861837906715;
 	public static final double TWO_PI = 6.2831853071795864769;
@@ -47,7 +55,7 @@ public class World {
 	public Tracer tracer;
 	public Camera camera;
 
-	public World() {
+	private World() {
 		this.vp = new ViewPlane();
 		this.objects = new LinkedList<GeometricObject>();
 		this.lights = new LinkedList<Light>();
