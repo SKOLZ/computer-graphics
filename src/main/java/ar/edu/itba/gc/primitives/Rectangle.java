@@ -26,7 +26,7 @@
 //	// TODO: Arreglar viejaaa
 //
 //	@Override
-//	public ShadeRec hit(ShadeRec sr, Vector3d origin, Vector3d direction) {
+//	public double hit(ShadeRec sr, double tmin, Vector3d origin, Vector3d direction) {
 //		ShadeRec auxSr = super.hit(sr, origin, direction);
 //		if (auxSr.getT() > 0.0) {
 //			Vector3d p = Vectors.plus(origin,
