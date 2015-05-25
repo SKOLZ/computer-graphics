@@ -10,7 +10,7 @@ import ar.edu.itba.gc.util.RGBColor;
 import ar.edu.itba.gc.util.ShadeRec;
 
 public class ImageTexture extends Texture {
-	
+
 	private int hres;
 	private int vres;
 	private BufferedImage image;
@@ -28,17 +28,19 @@ public class ImageTexture extends Texture {
 	public RGBColor getColor(ShadeRec sr) {
 		int r = 0;
 		int c = 0;
-		
+
 		if (mapping != null) {
-			Point2d pos = mapping.getTexelCoordinates(sr.getLocalHitPoint(), hres, vres);
-			r = (int)pos.y;
-			c = (int)pos.x;
+			Point2d pos = mapping.getTexelCoordinates(sr.getLocalHitPoint(),
+					hres, vres);
+			r = (int) pos.y;
+			c = (int) pos.x;
 		} else {
-			r = (int)(sr.getV() * (vres -1));
-			c = (int)(sr.getU() * (hres -1));
+			r = (int) (sr.getV() * (vres - 1));
+			c = (int) (sr.getU() * (hres - 1));
 		}
-		Color color = new Color(image.getRGB(c, vres-1-r));
-		return new RGBColor(color.getRed(), color.getGreen(), color.getBlue());
+		Color color = new Color(image.getRGB(c, vres - 1 - r));
+		return new RGBColor((double) color.getRed() / 255,
+				(double) color.getGreen() / 255, (double) color.getBlue() / 255);
 	}
 
 }

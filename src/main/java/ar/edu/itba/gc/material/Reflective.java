@@ -27,7 +27,7 @@ public class Reflective extends Phong {
 		Vector3d wo = Vectors.scale(sr.getDirection(), -1);
 		Vector3d wi = new Vector3d();
 		RGBColor fr = this.reflectiveBRDF.sampleF(sr, wo, wi);
-		Ray reflectedRay = new Ray(sr.getHitPoint(), wi, sr.getDepth() + 1);
+		Ray reflectedRay = new Ray(sr.getLocalHitPoint(), wi, sr.getDepth() + 1);
 
 		l.sum(RGBColor.mult(
 				RGBColor.mult(

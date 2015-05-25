@@ -15,19 +15,17 @@ import ar.edu.itba.gc.light.AmbientLight;
 import ar.edu.itba.gc.light.Light;
 import ar.edu.itba.gc.light.PointLight;
 import ar.edu.itba.gc.mapping.RectangularMap;
+import ar.edu.itba.gc.mapping.SphericalMap;
 import ar.edu.itba.gc.material.Matte;
-import ar.edu.itba.gc.material.Phong;
 import ar.edu.itba.gc.primitives.GeometricObject;
 import ar.edu.itba.gc.primitives.Instance;
 import ar.edu.itba.gc.primitives.Plane;
 import ar.edu.itba.gc.primitives.Sphere;
-import ar.edu.itba.gc.texture.ConstantColor;
-import ar.edu.itba.gc.texture.chessTexture;
+import ar.edu.itba.gc.texture.ChessTexture;
+import ar.edu.itba.gc.texture.ImageTexture;
 import ar.edu.itba.gc.tracer.Tracer;
 import ar.edu.itba.gc.tracer.WhittedTracer;
-import ar.edu.itba.gc.util.KDNode;
 import ar.edu.itba.gc.util.RGBColor;
-import ar.edu.itba.gc.util.Ray;
 
 public class World {
 
@@ -39,7 +37,7 @@ public class World {
 	public ViewPlane vp;
 	public RGBColor background;
 	public List<GeometricObject> objects;
-	public KDNode<GeometricObject> tree;
+	// public KDNode<GeometricObject> tree;
 	public List<Light> lights;
 	public Light ambientLight;
 	public Tracer tracer;
@@ -69,7 +67,7 @@ public class World {
 		vp.setVerticalRes(1000);
 		vp.setPixelSize(1.0);
 		vp.setGamma(1.0);
-		vp.setSampleNum(1);
+		vp.setSampleNum(10);
 		vp.setMaxDepth(10);
 		background = RGBColor.black();
 		ambientLight = AmbientLight.white();
@@ -117,38 +115,42 @@ public class World {
 		// 0, 1, 1), vp.getSampler()), new Vector3d(0, 0, 0),
 		// new Vector3d(100, 100, 25), new Vector3d(30, 20, 30)));
 
-		this.addLight(new PointLight(1, new Vector3d(0, 800, 800)));
+		this.addLight(new PointLight(10, new Vector3d(400, 800, 0)));
 		//
 		File f = new File("world.png");
 		BufferedImage img;
 		try {
 			img = ImageIO.read(f);
-			// Instance sphere = new Instance(new Sphere(new Phong(this, 0.25,
-			// 0.75, 1, 25, new ImageTexture(img.getWidth(), img.getHeight(),
-			// img, new SphericalMap()),
-			// vp.getSampler())));
+			Instance sphere = new Instance(new Sphere(new Matte(this, 0.25,
+					0.75, new ImageTexture(img.getWidth(), img.getHeight(),
+							img, new SphericalMap()), vp.getSampler())));
 			// sphere.scale(100, 100, 100);
 			// sphere.rotateY(250);
 			// sphere.translate(0, 100, 0);
 			// addObject(sphere);
 
-			Phong p = new Phong(this, 0.25, 0.8, 0.15, 50.0, new ConstantColor(
-					new RGBColor(0, 1, 0)), vp.getSampler());
-			Sphere s = new Sphere(p);
-
-			Instance sphere = new Instance(s);
-			sphere.scale(100, 100, 100);
-			sphere.rotateY(250);
-			sphere.translate(0, 0, -400);
+			// Phong p = new Phong(this, 0.25, 0.8, 0.15, 50.0, new
+			// ConstantColor(
+			// new RGBColor(0, 1, 0)), vp.getSampler());
+			// Instance sphere = new Instance(s);
+			// sphere.scale(100, 100, 100);
+			// sphere.rotateY(250);
+			// sphere.translate(0, 0, -400);
 			// addObject(sphere);
 
-			addObject(new Sphere(p, new Vector3d(0, 0, -400), 100));
-
 			Instance plane = new Instance(new Plane(new Matte(this, 0.25, 0.75,
-					new chessTexture(new RectangularMap()), vp.getSampler()),
+					new ChessTexture(new RectangularMap()), vp.getSampler()),
 					new Vector3d(0.0, 0.0, 0.0), new Vector3d(0, 1, 0)));
+			// Instance sphere = new Instance(new Sphere(p));
 			plane.rotateY(45);
-			addObject(plane);
+			sphere.translate(0, 1, 0);
+			sphere.scale(100, 100, 100);
+			 addObject(plane);
+			addObject(sphere);
+			// addObject(new Plane(new Matte(this, 0.25, 0.75, new
+			// ConstantColor(
+			// new RGBColor(1, 0, 0)), vp.getSampler()), new Vector3d(0,
+			// 0, 0), new Vector3d(0, 1, 0)));
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -172,13 +174,11 @@ public class World {
 	}
 
 	public void renderScene() {
-		BufferedImage img = camera.renderScene(this);
-		System.out.println(Ray.count);
-		// System.out.println(tree.count);
-		for (GeometricObject obj : objects) {
-			System.out.println(obj.count);
-		}
-		File f = new File("MyFile.png");
+		saveImage(camera.renderScene(this), "MyFile.png");
+	}
+
+	public void saveImage(BufferedImage img, String fileName) {
+		File f = new File(fileName);
 		try {
 			ImageIO.write(img, "PNG", f);
 		} catch (IOException e) {

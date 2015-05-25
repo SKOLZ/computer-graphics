@@ -42,7 +42,7 @@ public class Sphere extends GeometricObject {
 	}
 
 	@Override
-	public ShadeRec hit(ShadeRec sr, Vector3d origin, Vector3d direction) {
+	public double hit(ShadeRec sr, double tmin, Vector3d origin, Vector3d direction) {
 		count++;
 		double t;
 		Vector3d temp = Vectors.sub(origin, center);
@@ -52,33 +52,49 @@ public class Sphere extends GeometricObject {
 		double disc = b * b - 4.0 * a * c;
 
 		if (disc < 0.0) {
-			return sr;
+			return -1.0;
 		} else {
 			double e = Math.sqrt(disc);
 			double denom = 2.0 * a;
 			t = (-b - e) / denom;
 
-			if (t > Constants.KEPS && t < sr.getT()) {
+			if (t > Constants.KEPS && t < tmin) {
 				Vector3d hitPoint = Vectors.plus(origin,
 						Vectors.scale(direction, t));
 				Vector3d normal = Vectors.scale(
 						Vectors.plus(temp, Vectors.scale(direction, t)),
 						1 / radius);
-				return new ShadeRec(true, sr.getWorld(), this.getMaterial(),
-						normal, hitPoint, hitPoint, direction, t, 0, 0, sr.getDepth());
+				sr.setHitsAnObject(true);
+				sr.setMaterial(this.getMaterial());
+				sr.setNormal(normal);
+				sr.setHitPoint(hitPoint);
+				sr.setLocalHitPoint(hitPoint);
+				sr.setDirection(direction);
+				sr.setU(0);
+				sr.setV(0);
+				
+				return t;
 			}
 			t = (-b + e) / denom;
-			if (t > Constants.KEPS && t < sr.getT()) {
+			if (t > Constants.KEPS && t < tmin) {
 				Vector3d hitPoint = Vectors.plus(origin,
 						Vectors.scale(direction, t));
 				Vector3d normal = Vectors.scale(
 						Vectors.plus(temp, Vectors.scale(direction, t)),
 						1 / radius);
-				return new ShadeRec(true, sr.getWorld(), this.getMaterial(),
-						normal, hitPoint, hitPoint, direction, t, 0, 0, sr.getDepth());
+				sr.setHitsAnObject(true);
+				sr.setMaterial(this.getMaterial());
+				sr.setNormal(normal);
+				sr.setHitPoint(hitPoint);
+				sr.setLocalHitPoint(hitPoint);
+				sr.setDirection(direction);
+				sr.setU(0);
+				sr.setV(0);
+				
+				return t;
 			}
+			return -1.0;
 		}
-		return sr;
 	}
 
 	@Override

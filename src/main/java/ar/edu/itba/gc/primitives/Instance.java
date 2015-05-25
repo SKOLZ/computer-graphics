@@ -4,64 +4,62 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.material.Material;
-import ar.edu.itba.gc.util.KDNode;
 import ar.edu.itba.gc.util.Matrixes;
 import ar.edu.itba.gc.util.Ray;
 import ar.edu.itba.gc.util.ShadeRec;
 
-import com.google.common.collect.Lists;
-
 public class Instance extends GeometricObject {
 
 	private GeometricObject geometricObject;
-	private KDNode<GeometricObject> tree;
+	// private KDNode<GeometricObject> tree;
 	private Matrix4d invMatrix;
 	private Matrix4d invTransMatrix;
 	private Matrix4d matrix;
-	private boolean isTextureTransformed;
 
 	public Instance(Material material) {
 		super(material);
 	}
-	
+
 	public Instance(GeometricObject geometricObject) {
 		super();
 		this.geometricObject = geometricObject;
-		this.tree = KDNode.build(Lists.newArrayList(geometricObject));
+		// this.tree = KDNode.build(Lists.newArrayList(geometricObject));
 		this.matrix = Matrixes.newIdenty4d();
 		updateMatrixes();
-		
+
 	}
-	
+
 	public Instance(GeometricObject geometricObject, Matrix4d matrix) {
 		super();
 		this.geometricObject = geometricObject;
 		this.matrix = matrix;
 		updateMatrixes();
 	}
-	
+
 	@Override
-	public ShadeRec hit(ShadeRec sr, Vector3d origin, Vector3d direction) {
+	public double hit(ShadeRec sr, double tmin, Vector3d origin,
+			Vector3d direction) {
 		Ray invRay = new Ray(origin, direction);
 		invRay.setOrigin(Matrixes.matrixMultPoint(invMatrix, origin));
 		invRay.setDirection(Matrixes.matrixMultVector(invMatrix, direction));
-		ShadeRec newSr = geometricObject.hit(sr, invRay.getOrigin(), invRay.getDirection());
-//		ShadeRec newSr = tree.hit(sr, invRay.getOrigin(), invRay.getDirection());
-		if (newSr.hitsAnObject()) {
-			newSr.setNormal(Matrixes.matrixMultVector(invTransMatrix, newSr.getNormal()));
-			newSr.getNormal().normalize();
+		double t = geometricObject.hit(sr, tmin, invRay.getOrigin(),
+				invRay.getDirection());
+		if (sr.hitsAnObject() && t > 0 && t < tmin) {
+			sr.setNormal(Matrixes.matrixMultVector(invTransMatrix,
+					sr.getNormal()));
+			sr.getNormal().normalize();
 			if (geometricObject.getMaterial() != null) {
 				setMaterial(geometricObject.getMaterial());
-			}		
-//			if (!isTextureTransformed) {
-//				newSr.setLocalHitPoint(Vectors.plus(origin, Vectors.scale(direction, newSr.getT())));
-//			}
+			}
+			sr.setHitPoint(Matrixes.matrixMultPoint(matrix, sr.getHitPoint()));
+			return t;
 		}
-		return newSr;
+		return -1.0;
 	}
-	
+
 	public void translate(double dx, double dy, double dz) {
 		Matrix4d translationMatrix = Matrixes.newIdenty4d();
+//		matrix.transform(new Vector3d(dx, dy, dz));
 		translationMatrix.m03 = dx;
 		translationMatrix.m13 = dy;
 		translationMatrix.m23 = dz;
@@ -69,7 +67,7 @@ public class Instance extends GeometricObject {
 		matrix = translationMatrix;
 		updateMatrixes();
 	}
-	
+
 	public void scale(double a, double b, double c) {
 		Matrix4d scaleMatrix = Matrixes.newIdenty4d();
 		scaleMatrix.m00 = a;
@@ -79,7 +77,7 @@ public class Instance extends GeometricObject {
 		matrix = scaleMatrix;
 		updateMatrixes();
 	}
-	
+
 	public void rotateX(double degrees) {
 		Matrix4d rotationXMatrix = Matrixes.newIdenty4d();
 		rotationXMatrix.m11 = Math.cos(Math.toRadians(degrees));
@@ -90,7 +88,7 @@ public class Instance extends GeometricObject {
 		matrix = rotationXMatrix;
 		updateMatrixes();
 	}
-	
+
 	public void rotateY(double degrees) {
 		Matrix4d rotationYMatrix = Matrixes.newIdenty4d();
 		rotationYMatrix.m00 = Math.cos(Math.toRadians(degrees));
@@ -101,7 +99,7 @@ public class Instance extends GeometricObject {
 		matrix = rotationYMatrix;
 		updateMatrixes();
 	}
-	
+
 	public void rotateZ(double degrees) {
 		Matrix4d rotationZMatrix = Matrixes.newIdenty4d();
 		rotationZMatrix.m00 = Math.cos(Math.toRadians(degrees));
@@ -112,7 +110,7 @@ public class Instance extends GeometricObject {
 		matrix = rotationZMatrix;
 		updateMatrixes();
 	}
-	
+
 	private void updateMatrixes() {
 		this.invMatrix = Matrixes.inverse(matrix);
 		this.invTransMatrix = Matrixes.transpose(invMatrix);
@@ -122,7 +120,8 @@ public class Instance extends GeometricObject {
 	public double shadowHit(Ray ray) {
 		Ray invRay = new Ray(ray.getOrigin(), ray.getDirection());
 		invRay.setOrigin(Matrixes.matrixMultPoint(invMatrix, ray.getOrigin()));
-		invRay.setDirection(Matrixes.matrixMultVector(invMatrix, ray.getDirection()));
+		invRay.setDirection(Matrixes.matrixMultVector(invMatrix,
+				ray.getDirection()));
 		return geometricObject.shadowHit(invRay);
 	}
 
@@ -135,5 +134,5 @@ public class Instance extends GeometricObject {
 	public Vector3d getCentroid() {
 		return this.geometricObject.getCentroid();
 	}
-	
+
 }

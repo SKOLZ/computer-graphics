@@ -28,22 +28,29 @@ public class Plane extends GeometricObject {
 	}
 
 	@Override
-	public ShadeRec hit(ShadeRec sr, Vector3d origin, Vector3d direction) {
+	public double hit(ShadeRec sr, double tmin, Vector3d origin, Vector3d direction) {
 		count++;
 		double t = Vectors.sub(point, origin).dot(normal)
 				/ direction.dot(normal);
 
 		if (t > Constants.KEPS) {
-			if (t < sr.getT()) {
+			if (t < tmin) {
 				Vector3d hitPoint = Vectors.plus(origin,
 						Vectors.scale(direction, t));
 
-				return new ShadeRec(true, sr.getWorld(), this.getMaterial(),
-						this.normal, hitPoint, hitPoint, direction, t, 0, 0,
-						sr.getDepth());
+				sr.setHitsAnObject(true);
+				sr.setMaterial(this.getMaterial());
+				sr.setNormal(normal);
+				sr.setHitPoint(hitPoint);
+				sr.setLocalHitPoint(hitPoint);
+				sr.setDirection(direction);
+				sr.setU(0);
+				sr.setV(0);
+				
+				return t;
 			}
 		}
-		return sr;
+		return -1.0;
 	}
 
 	@Override

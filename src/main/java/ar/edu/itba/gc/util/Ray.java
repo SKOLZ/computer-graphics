@@ -11,7 +11,6 @@ public class Ray {
 	private Vector3d origin;
 	private Vector3d direction;
 	private int depth;
-	private double tmin = Double.MAX_VALUE;
 
 	public Ray() {
 		this.depth = 0;
@@ -42,10 +41,6 @@ public class Ray {
 		return direction;
 	}
 
-	public double getTmin() {
-		return tmin;
-	}
-
 	protected int getDepth() {
 		return depth;
 	}
@@ -53,10 +48,13 @@ public class Ray {
 	public ShadeRec hit(World world) {
 		count++;
 		ShadeRec sr = new ShadeRec(world);
+		double t = Double.MAX_VALUE;
 		for (GeometricObject obj : world.getObjects()) {
-			sr = obj.hit(sr, origin, direction);
+			double auxT = obj.hit(sr, t, origin, direction);
+			if (auxT > 0 && sr.hitsAnObject()) {
+				t = auxT;
+			}
 		}
-		// sr = world.tree.hit(sr, this.origin, this.direction);
 		return sr;
 	}
 

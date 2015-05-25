@@ -56,7 +56,7 @@ public class Transparent extends Phong {
 							ft,
 							sr.getWorld().tracer.traceRay(transmittedRay,
 									sr.getDepth() + 1)),
-					Math.abs(sr.getNormal().dot(wi))));
+					Math.abs(sr.getNormal().dot(wt))));
 		}
 		return l;
 	}
