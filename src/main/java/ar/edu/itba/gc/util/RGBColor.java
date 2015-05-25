@@ -10,6 +10,18 @@ public class RGBColor {
 		return new RGBColor(1, 1, 1);
 	}
 
+	public static RGBColor red() {
+		return new RGBColor(1, 0, 0);
+	}
+
+	public static RGBColor green() {
+		return new RGBColor(0, 1, 0);
+	}
+
+	public static RGBColor blue() {
+		return new RGBColor(0, 0, 1);
+	}
+
 	public static RGBColor sum(RGBColor c1, RGBColor c2) {
 		return new RGBColor(c1.getR() + c2.getR(), c1.getG() + c2.getG(),
 				c1.getB() + c2.getB());
@@ -76,14 +88,14 @@ public class RGBColor {
 		this.r /= n;
 		this.g /= n;
 		this.b /= n;
-		
+
 	}
 
 	public void mult(double n) {
 		this.r *= n;
 		this.g *= n;
 		this.b *= n;
-		
+
 	}
 
 	public void divide(double n) {
