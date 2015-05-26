@@ -13,6 +13,16 @@ public class Plane extends GeometricObject {
 	private Vector3d point;
 	private Vector3d normal;
 
+	public Plane(Vector3d normal) {
+		this(new Vector3d(0, 0, 0), normal);
+	}
+
+	public Plane(Vector3d point, Vector3d normal) {
+		super();
+		this.point = point;
+		this.normal = normal;
+	}
+
 	public Plane(Material material, Vector3d point, Vector3d normal) {
 		super(material);
 		this.point = point;
@@ -28,7 +38,8 @@ public class Plane extends GeometricObject {
 	}
 
 	@Override
-	public double hit(ShadeRec sr, double tmin, Vector3d origin, Vector3d direction) {
+	public double hit(ShadeRec sr, double tmin, Vector3d origin,
+			Vector3d direction) {
 		count++;
 		double t = Vectors.sub(point, origin).dot(normal)
 				/ direction.dot(normal);
@@ -46,7 +57,7 @@ public class Plane extends GeometricObject {
 				sr.setDirection(direction);
 				sr.setU(0);
 				sr.setV(0);
-				
+
 				return t;
 			}
 		}

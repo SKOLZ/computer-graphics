@@ -1,7 +1,0 @@
-package ar.edu.itba.gc.parser.global;
-
-public enum Attributes {
-
-	WORLD_BEGIN, WORLD_END, ATTRIBUTE_BEGIN, ATTRIBUTE_END, TRANSFORM_BEGIN, TRANSFORM_END, OBJECT_BEGIN, OBJECT_END, OBJECT_INSTANCE;
-
-}

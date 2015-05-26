@@ -1,4 +1,4 @@
-package ar.edu.itba.gc.parser.global;
+package ar.edu.itba.gc.parser;
 
 public class Attribute {
 

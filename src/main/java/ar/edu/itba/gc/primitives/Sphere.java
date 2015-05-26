@@ -13,12 +13,16 @@ public class Sphere extends GeometricObject {
 	private Vector3d center;
 	private double radius;
 
+	public Sphere(double radius) {
+		this(null, new Vector3d(0, 0, 0), radius);
+	}
+
 	public Sphere(Material material, Vector3d center, double radius) {
 		super(material);
 		this.center = center;
 		this.radius = radius;
 	}
-	
+
 	public Sphere(Material material) {
 		super(material);
 		this.center = new Vector3d(0, 0, 0);
@@ -42,7 +46,8 @@ public class Sphere extends GeometricObject {
 	}
 
 	@Override
-	public double hit(ShadeRec sr, double tmin, Vector3d origin, Vector3d direction) {
+	public double hit(ShadeRec sr, double tmin, Vector3d origin,
+			Vector3d direction) {
 		count++;
 		double t;
 		Vector3d temp = Vectors.sub(origin, center);
@@ -72,7 +77,7 @@ public class Sphere extends GeometricObject {
 				sr.setDirection(direction);
 				sr.setU(0);
 				sr.setV(0);
-				
+
 				return t;
 			}
 			t = (-b + e) / denom;
@@ -90,7 +95,7 @@ public class Sphere extends GeometricObject {
 				sr.setDirection(direction);
 				sr.setU(0);
 				sr.setV(0);
-				
+
 				return t;
 			}
 			return -1.0;

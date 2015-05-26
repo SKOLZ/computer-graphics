@@ -57,9 +57,14 @@ public class Instance extends GeometricObject {
 		return -1.0;
 	}
 
+	public void transform(Matrix4d transform) {
+		matrix = transform;
+		updateMatrixes();
+	}
+
 	public void translate(double dx, double dy, double dz) {
 		Matrix4d translationMatrix = Matrixes.newIdenty4d();
-//		matrix.transform(new Vector3d(dx, dy, dz));
+		// matrix.transform(new Vector3d(dx, dy, dz));
 		translationMatrix.m03 = dx;
 		translationMatrix.m13 = dy;
 		translationMatrix.m23 = dz;

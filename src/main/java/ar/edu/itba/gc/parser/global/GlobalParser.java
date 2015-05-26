@@ -1,60 +1,55 @@
 package ar.edu.itba.gc.parser.global;
 
-import java.util.List;
 import java.util.Scanner;
 
-import com.google.common.collect.Lists;
+import ar.edu.itba.gc.camera.Camera;
+import ar.edu.itba.gc.world.World;
 
 public class GlobalParser {
 
-	public void parse(String s) {
-		Transformation currentTransformation = null;
+	private World world;
+	private LookAt lookAt = null;
+
+	private LookAtParser lookAtParser = LookAtParser.instance();
+	private CameraParser cameraParser = CameraParser.instance();
+	private FilmParser filmParser = FilmParser.instance();
+
+	public void parse(String s, World world) {
+		this.world = world;
+
 		Scanner scanner = new Scanner(s);
+		parse(scanner);
+		scanner.close();
+	}
 
+	private void parse(Scanner scanner) {
 		while (scanner.hasNext()) {
-			String nextLine;
-			do {
-				nextLine = scanner.nextLine();
-			} while (nextLine.startsWith("#") || nextLine.isEmpty());
-			String[] commands = nextLine.split(" ");
-
-			if (Transformation.isTransformation(commands[0])) {
-				List<String> values = Lists.newLinkedList();
-				for (int i = 1; i < commands.length; i++) {
-					values.add(commands[i]);
-				}
-				currentTransformation = new Transformation(commands[0], values);
-			} else {
-				Identifier identifier = new Identifier(commands[0],
-						commands[1].replace("\"", ""));
-				// Parse attributes
-				if (scanner.hasNext()) {
-					while (scanner.hasNext()) {
-						String att = scanner.nextLine();
-						if (att != null && att.startsWith("\t")) {
-							att = att.trim();
-							int idx = att.indexOf("[");
-							String[] type = att.substring(0, idx - 1).split(
-									"\"")[1].split(" ");
-							identifier
-									.addAttribute(new Attribute(type[0],
-											type[1], att.substring(idx + 1,
-													att.length() - 1).replace(
-													"\"", "")));
-						} else {
-							break;
-						}
-					}
-				}
-				// Set transformation for identifier (if exists)
-				if (currentTransformation != null) {
-					identifier.setTransformation(currentTransformation);
-					currentTransformation = null;
-				}
-				identifier.buildIdentifier();
+			String[] line = scanner.nextLine().trim().split(" ");
+			switch (line[0]) {
+			case "Camera":
+				if (this.lookAt == null)
+					throw new IllegalStateException(
+							"LookAt should be specified before Camera");
+				Camera camera = cameraParser.parse(scanner, "perspective",
+						lookAt);
+				camera.computeUVW();
+				world.camera = camera;
+				break;
+			case "Film":
+				Film film = filmParser.parse(scanner);
+				world.vp.setGamma(film.getGamma());
+				world.vp.setHorizontalRes(film.getHres());
+				world.vp.setVerticalRes(film.getVres());
+				break;
+			case "LookAt":
+				if (this.lookAt != null)
+					throw new IllegalStateException("LookAt already setted");
+				lookAt = lookAtParser.parse(line);
+				break;
+			default:
+				break;
 			}
 		}
-		scanner.close();
 	}
 
 }
