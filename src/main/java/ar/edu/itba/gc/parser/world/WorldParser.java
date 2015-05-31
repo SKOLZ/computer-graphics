@@ -67,8 +67,8 @@ public class WorldParser {
 						splittedLine[1].replaceAll("\"", "")));
 				break;
 			case "Transform":
-				transform = transformParser.parse(line.replaceAll("[", "")
-						.replaceAll("]", "").split(" "));
+				transform = transformParser.parse(line.replace("[", "")
+						.replace("]", "").split(" "));
 				break;
 			case "TransformBegin":
 				transform = transformParser.parse(scanner);

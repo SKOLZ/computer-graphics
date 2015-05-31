@@ -38,7 +38,7 @@ class MatteParser {
 		if (cd == null) {
 			throw new IllegalArgumentException("Inexistent texture");
 		}
-		return new Matte(world, 0.0, 1.0, cd, world.vp.getSampler());
+		return new Matte(world, 0.25, 1.0, cd, world.vp.getSampler());
 	}
 
 }
