@@ -16,17 +16,17 @@ public class Parser {
 	private WorldParser worldParser = new WorldParser();
 
 	public static void main(String[] args) throws IOException {
-		new Parser().parse("gilada.txt");
+		new Parser().parse("mesh.txt");
 	}
 
 	public void parse(String path) throws IOException {
 		World w = World.getInstance();
 
 		w.vp.setPixelSize(1.0);
-		w.vp.setSampleNum(10);
+		w.vp.setSampleNum(2);
 		w.vp.setMaxDepth(10);
 		w.background = RGBColor.black();
-		w.ambientLight = AmbientLight.black();
+		w.ambientLight = AmbientLight.white();
 
 		Scanner scanner = new Scanner(Paths.get(path), "UTF-8");
 		if (scanner.hasNext()) {

@@ -13,41 +13,21 @@ public abstract class MeshTriangle extends GeometricObject {
 	private Mesh mesh;
 	private int index0, index1, index2;
 	private Vector3d normal;
-	private double area;
+	private Vector3d v0, v1, v2;
 
 	public MeshTriangle(Material material, Mesh mesh, int index0, int index1,
-			int index2, Vector3d normal, double area) {
+			int index2) {
 		super(material);
 		this.mesh = mesh;
 		this.index0 = index0;
 		this.index1 = index1;
 		this.index2 = index2;
-		this.normal = normal;
-		this.area = area;
-	}
 
-	public void setMesh(Mesh mesh) {
-		this.mesh = mesh;
-	}
+		this.v0 = mesh.getVertices()[index0];
+		this.v1 = mesh.getVertices()[index1];
+		this.v2 = mesh.getVertices()[index2];
 
-	public void setIndex0(int index0) {
-		this.index0 = index0;
-	}
-
-	public void setIndex1(int index1) {
-		this.index1 = index1;
-	}
-
-	public void setIndex2(int index2) {
-		this.index2 = index2;
-	}
-
-	public void setNormal(Vector3d normal) {
-		this.normal = normal;
-	}
-
-	public void setArea(double area) {
-		this.area = area;
+		this.computeNormal(false);
 	}
 
 	protected Mesh getMesh() {
@@ -70,39 +50,47 @@ public abstract class MeshTriangle extends GeometricObject {
 		return normal;
 	}
 
-	protected double getArea() {
-		return area;
+	protected Vector3d getV0() {
+		return v0;
 	}
-	
+
+	protected Vector3d getV1() {
+		return v1;
+	}
+
+	protected Vector3d getV2() {
+		return v2;
+	}
+
 	@Override
 	public double shadowHit(Ray ray) {
 		return calculateT(ray.getOrigin(), ray.getDirection(), null);
 	}
-	
+
 	@Override
 	public BoundingBox getBoundingBox() {
-		Vector3d v0 = mesh.getVertices().get(getIndex0());
-		Vector3d v1 = mesh.getVertices().get(getIndex1());
-		Vector3d v2 = mesh.getVertices().get(getIndex2());
-
-		double minX = Math.min(v0.x, Math.min(v1.x, v2.x)) - Constants.KEPS;
-		double minY = Math.min(v0.y, Math.min(v1.y, v2.y)) - Constants.KEPS;
-		double minZ = Math.min(v0.z, Math.min(v1.z, v2.z)) - Constants.KEPS;
-		double maxX = Math.max(v0.x, Math.max(v1.x, v2.x)) + Constants.KEPS;
-		double maxY = Math.max(v0.y, Math.max(v1.y, v2.y)) + Constants.KEPS;
-		double maxZ = Math.max(v0.z, Math.max(v1.z, v2.z)) + Constants.KEPS;
-
-		return new BoundingBox(minX, maxX, minY, maxY, minZ, maxZ);
+		double delta = 0.000001;
+		double x0 = Math.min(Math.min(v0.x, v1.x), v2.x) - delta;
+		double x1 = Math.max(Math.max(v0.x, v1.x), v2.x) + delta;
+		double y0 = Math.min(Math.min(v0.y, v1.y), v2.y) - delta;
+		double y1 = Math.max(Math.max(v0.y, v1.y), v2.y) + delta;
+		double z0 = Math.min(Math.min(v0.z, v1.z), v2.z) - delta;
+		double z1 = Math.max(Math.max(v0.z, v1.z), v2.z) + delta;
+		return new BoundingBox(x0, x1, y0, y1, z0, z1);
 	}
-	
+
+	@Override
+	public Vector3d getCentroid() {
+		double x = (v0.x + v1.x + v2.x) / 3;
+		double y = (v0.y + v1.y + v2.y) / 3;
+		double z = (v0.z + v1.z + v2.z) / 3;
+		return new Vector3d(x, y, z);
+	}
+
 	protected double calculateT(Vector3d origin, Vector3d direction, ShadeRec sr) {
 		if (!getBoundingBox().hit(origin, direction)) {
 			return -1;
 		}
-		
-		Vector3d v0 = getMesh().getVertices().get(getIndex0());
-		Vector3d v1 = getMesh().getVertices().get(getIndex1());
-		Vector3d v2 = getMesh().getVertices().get(getIndex2());
 
 		double a = v0.x - v1.x, b = v0.x - v2.x, c = direction.x, d = v0.x
 				- origin.x;
@@ -126,7 +114,7 @@ public abstract class MeshTriangle extends GeometricObject {
 		double e2 = a * n + d * q + c * r;
 		double gamma = e2 * inv_denom;
 
-		if (gamma < 0.0 || beta + gamma > 1.0){
+		if (gamma < 0.0 || beta + gamma > 1.0) {
 			return -1;
 		}
 
@@ -137,26 +125,101 @@ public abstract class MeshTriangle extends GeometricObject {
 			return -1;
 		}
 		if (sr != null) {
-			sr.setLocalHitPoint(Vectors.plus(origin, Vectors.scale(direction, t)));
+			sr.setLocalHitPoint(Vectors.plus(origin,
+					Vectors.scale(direction, t)));
+			sr.setHitsAnObject(true);
+			sr.setMaterial(this.getMaterial());
+			sr.setNormal(this.normal);
+			sr.setHitPoint(sr.getLocalHitPoint());
+			sr.setDirection(direction);
 			if (getMesh().getU() != null && getMesh().getV() != null) {
 				sr.setU(interpolateU(beta, gamma));
 				sr.setV(interpolateV(beta, gamma));
-			}			
+			}
 		}
 		return t;
 	}
 
 	protected double interpolateV(double beta, double gamma) {
-		return (1 - beta - gamma) * getMesh().getV().get(getIndex0()) + beta
-				* getMesh().getV().get(getIndex1()) + gamma * getMesh().getV().get(getIndex2());
+		return (1 - beta - gamma) * getMesh().getV()[getIndex0()] + beta
+				* getMesh().getV()[getIndex1()] + gamma
+				* getMesh().getV()[getIndex2()];
 	}
 
 	protected double interpolateU(double beta, double gamma) {
-		return (1 - beta - gamma) * getMesh().getU().get(getIndex0()) + beta
-				* getMesh().getU().get(getIndex1()) + gamma * getMesh().getU().get(getIndex2());
+		return (1 - beta - gamma) * getMesh().getU()[getIndex0()] + beta
+				* getMesh().getU()[getIndex1()] + gamma
+				* getMesh().getU()[getIndex2()];
 	}
-	
-	
-	
-	
+
+	// private void computeNormal() {
+	// if (normal != null)
+	// throw new IllegalStateException();
+	// Vector3d v = Vectors.sub(v1, v0);
+	// Vector3d w = Vectors.sub(v2, v0);
+	// Vector3d auxNormal = new Vector3d(v.y * w.z - v.z * w.y, v.z * w.x
+	// - v.x * w.z, v.x * w.y - v.y * w.x);
+	// double sum = Math.abs(auxNormal.x) + Math.abs(auxNormal.y)
+	// + Math.abs(auxNormal.z);
+	// this.normal = new Vector3d(auxNormal.x / sum, auxNormal.y / sum,
+	// auxNormal.z / sum);
+	// }
+
+	private void computeNormal(boolean reverse) {
+		Vector3d arg0 = Vectors.sub(mesh.getVertices()[index1],
+				mesh.getVertices()[index0]);
+		Vector3d arg1 = Vectors.sub(mesh.getVertices()[index2],
+				mesh.getVertices()[index0]);
+		arg0.cross(arg0, arg1);
+		normal = arg0;
+		normal.normalize();
+
+		if (reverse) {
+			normal.negate();
+		}
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MeshTriangle other = (MeshTriangle) obj;
+		if (index0 != other.index0)
+			return false;
+		if (index1 != other.index1)
+			return false;
+		if (index2 != other.index2)
+			return false;
+		if (mesh == null) {
+			if (other.mesh != null)
+				return false;
+		} else if (!mesh.equals(other.mesh))
+			return false;
+		if (normal == null) {
+			if (other.normal != null)
+				return false;
+		} else if (!normal.equals(other.normal))
+			return false;
+		if (v0 == null) {
+			if (other.v0 != null)
+				return false;
+		} else if (!v0.equals(other.v0))
+			return false;
+		if (v1 == null) {
+			if (other.v1 != null)
+				return false;
+		} else if (!v1.equals(other.v1))
+			return false;
+		if (v2 == null) {
+			if (other.v2 != null)
+				return false;
+		} else if (!v2.equals(other.v2))
+			return false;
+		return true;
+	}
+
 }
