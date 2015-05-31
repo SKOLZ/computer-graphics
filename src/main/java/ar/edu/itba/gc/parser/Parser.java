@@ -16,15 +16,17 @@ public class Parser {
 	private WorldParser worldParser = new WorldParser();
 
 	public static void main(String[] args) throws IOException {
-		new Parser().parse("mesh.txt");
+		new Parser().parse("mesh.txt", 2, 10);
+		World w = World.getInstance();
+		w.renderScene("MyFile.png");
 	}
 
-	public void parse(String path) throws IOException {
+	public void parse(String path, int aaSamples, int depth) throws IOException {
 		World w = World.getInstance();
 
 		w.vp.setPixelSize(1.0);
-		w.vp.setSampleNum(2);
-		w.vp.setMaxDepth(10);
+		w.vp.setSampleNum(aaSamples);
+		w.vp.setMaxDepth(depth);
 		w.background = RGBColor.black();
 		w.ambientLight = AmbientLight.white();
 
@@ -51,9 +53,6 @@ public class Parser {
 
 			worldParser.parse(world.toString(), w);
 		}
-
-		w.renderScene();
-
 		scanner.close();
 	}
 

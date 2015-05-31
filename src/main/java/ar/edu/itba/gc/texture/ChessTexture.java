@@ -24,15 +24,15 @@ public class ChessTexture extends Texture {
 		int c = (int)pos.x;		
 		if(r % 20 < 10) {
 			if(c % 20 < 10) {
-				return ((r * c) < 0) ? RGBColor.white() : RGBColor.black();
+				return RGBColor.black();
 			} else {
-				return ((r * c) < 0) ? RGBColor.black() : RGBColor.white();
+				return RGBColor.white();
 			}
 		} else {
 			if(c % 20 < 10) {
-				return ((r * c) < 0) ? RGBColor.white() : RGBColor.black();
+				return RGBColor.white();
 			} else {
-				return ((r * c) < 0) ? RGBColor.black() : RGBColor.white();
+				return RGBColor.black();
 			}
 		}
 	}

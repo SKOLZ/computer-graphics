@@ -178,8 +178,8 @@ public class World {
 		}
 	}
 
-	public void renderScene() {
-		saveImage(camera.renderScene(this), "MyFile.png");
+	public void renderScene(String outputPath) {
+		saveImage(camera.renderScene(this), outputPath);
 	}
 
 	public void saveImage(BufferedImage img, String fileName) {
