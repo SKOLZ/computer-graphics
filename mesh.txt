@@ -9,11 +9,15 @@ Film "fleximage"
 
 WorldBegin
 
+Texture "Kd_lizardon" "color" "imagemap"
+	"string filename" ["charizard.jpg"]
+	"string mapping" ["uv"]
+
 Texture "Kd_red" "color" "constant"
 	"color value" [1.0 0.0 0.0]
 
 MakeNamedMaterial "mat_1"
-	"texture Kd" ["Kd_red"]
+	"texture Kd" ["Kd_lizardon"]
 	"string type" ["matte"]
 
 Texture "Kd_white" "color" "constant"
@@ -27,6 +31,9 @@ LightSource "point"
 	"float gain" [3]
 	"color L" [1 1 1]
 	"point from" [-10 10 20]
+
+LightSource "infinite"
+	"color L" [1 1 1]
 
 AttributeBegin
 Transform [0.250000000000000 0.000000000000000 0.000000000000000 0.000000000000000 0.000000000000000 -0.250000000000000 -0.000000021855694 0.000000000000000 0.000000000000000 0.000000021855694 -0.250000000000000 0.000000000000000 0.000000000000000 0.000000000000000 0.000000000000000 1.000000000000000]

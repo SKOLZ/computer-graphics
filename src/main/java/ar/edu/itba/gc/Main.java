@@ -71,15 +71,6 @@ public class Main {
 			System.out.println("Total time: "
 					+ (System.currentTimeMillis() - start) + "ms");			
 		}
-		
-		
-//		-- WITHOUT PARSER --
-//		long start = System.currentTimeMillis();
-//		World w = World.getInstance();
-//		w.build();
-//		w.renderScene();
-//		System.out.println("Total time: "
-//				+ (System.currentTimeMillis() - start) + "ms");
 	}
 
 }

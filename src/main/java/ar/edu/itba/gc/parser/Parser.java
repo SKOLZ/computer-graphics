@@ -28,7 +28,6 @@ public class Parser {
 		w.vp.setSampleNum(aaSamples);
 		w.vp.setMaxDepth(depth);
 		w.background = RGBColor.black();
-		w.ambientLight = AmbientLight.white();
 
 		Scanner scanner = new Scanner(Paths.get(path), "UTF-8");
 		if (scanner.hasNext()) {
@@ -53,6 +52,9 @@ public class Parser {
 
 			worldParser.parse(world.toString(), w);
 		}
+
+		if (w.ambientLight == null)
+			w.ambientLight = AmbientLight.black();
 		scanner.close();
 	}
 

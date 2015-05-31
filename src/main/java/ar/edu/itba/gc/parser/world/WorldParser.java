@@ -3,13 +3,15 @@ package ar.edu.itba.gc.parser.world;
 import java.util.Map;
 import java.util.Scanner;
 
+import ar.edu.itba.gc.light.AmbientLight;
+import ar.edu.itba.gc.light.Light;
 import ar.edu.itba.gc.material.Material;
 import ar.edu.itba.gc.parser.world.light.LightParser;
 import ar.edu.itba.gc.parser.world.material.MaterialParser;
 import ar.edu.itba.gc.parser.world.shape.ShapeParser;
 import ar.edu.itba.gc.parser.world.texture.TextureParser;
-import ar.edu.itba.gc.parser.world.transform.Transformation;
 import ar.edu.itba.gc.parser.world.transform.TransformParser;
+import ar.edu.itba.gc.parser.world.transform.Transformation;
 import ar.edu.itba.gc.primitives.GeometricObject;
 import ar.edu.itba.gc.primitives.Instance;
 import ar.edu.itba.gc.texture.Texture;
@@ -63,8 +65,7 @@ public class WorldParser {
 				parseMaterial(splittedLine);
 				break;
 			case "LightSource":
-				world.addLight(this.lightParser.parse(scanner,
-						splittedLine[1].replaceAll("\"", "")));
+				parseLight(scanner, splittedLine);
 				break;
 			case "Transform":
 				transform = transformParser.parse(line.replace("[", "")
@@ -77,6 +78,15 @@ public class WorldParser {
 				break;
 			}
 		}
+	}
+
+	private void parseLight(Scanner scanner, String[] splittedLine) {
+		Light light = this.lightParser.parse(scanner,
+				splittedLine[1].replaceAll("\"", ""));
+		if (light instanceof AmbientLight)
+			world.ambientLight = light;
+		else
+			world.addLight(light);
 	}
 
 	private void parseMaterial(Scanner scanner, String[] line) {

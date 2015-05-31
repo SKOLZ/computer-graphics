@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 
 import ar.edu.itba.gc.mapping.Mapping;
 import ar.edu.itba.gc.mapping.RectangularMap;
+import ar.edu.itba.gc.mapping.SphericalMap;
 import ar.edu.itba.gc.parser.Attribute;
 import ar.edu.itba.gc.texture.ImageTexture;
 
@@ -45,7 +46,12 @@ class ImageMapParser {
 					}
 					break;
 				case "mapping":
-					mapping = new RectangularMap();
+					if (a.getValue().equals("uv"))
+						mapping = null;
+					else if (a.getValue().equals("spherical"))
+						mapping = new SphericalMap();
+					else if (a.getValue().equals("planar"))
+						mapping = new RectangularMap();
 					break;
 				default:
 					break;
@@ -53,7 +59,7 @@ class ImageMapParser {
 			}
 		}
 
-		if (image == null || mapping == null) {
+		if (image == null) {
 			throw new IllegalArgumentException(
 					"Missing parameteres for ImageMap Texture");
 		}

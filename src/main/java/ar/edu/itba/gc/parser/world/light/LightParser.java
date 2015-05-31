@@ -23,10 +23,10 @@ public class LightParser {
 		switch (type) {
 		case "point":
 			return PointLightParser.instance().parse(scanner);
-		case "distance":
-			break;
+		case "distant":
+			return DirectionalLightParser.instance().parse(scanner);
 		case "infinite":
-			break;
+			return AmbientLightParser.instance().parse(scanner);
 		}
 		throw new IllegalArgumentException("Invalid LightSource type");
 	}
