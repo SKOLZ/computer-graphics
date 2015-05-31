@@ -21,18 +21,18 @@ public class ChessTexture extends Texture {
 	public RGBColor getColor(ShadeRec sr) {
 		Point2d pos = mapping.getTexelCoordinates(sr.getLocalHitPoint(), 100, 100);
 		int r = (int)pos.y;
-		int c = (int)pos.x;
+		int c = (int)pos.x;		
 		if(r % 20 < 10) {
 			if(c % 20 < 10) {
-				return RGBColor.black();
+				return ((r * c) < 0) ? RGBColor.white() : RGBColor.black();
 			} else {
-				return RGBColor.white();
+				return ((r * c) < 0) ? RGBColor.black() : RGBColor.white();
 			}
 		} else {
 			if(c % 20 < 10) {
-				return RGBColor.white();
+				return ((r * c) < 0) ? RGBColor.white() : RGBColor.black();
 			} else {
-				return RGBColor.black();
+				return ((r * c) < 0) ? RGBColor.black() : RGBColor.white();
 			}
 		}
 	}

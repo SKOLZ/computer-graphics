@@ -17,11 +17,12 @@ import ar.edu.itba.gc.light.PointLight;
 import ar.edu.itba.gc.mapping.RectangularMap;
 import ar.edu.itba.gc.material.Matte;
 import ar.edu.itba.gc.material.Reflective;
+import ar.edu.itba.gc.material.Transparent;
+import ar.edu.itba.gc.primitives.Box;
 import ar.edu.itba.gc.primitives.GeometricObject;
 import ar.edu.itba.gc.primitives.Instance;
 import ar.edu.itba.gc.primitives.Plane;
 import ar.edu.itba.gc.primitives.Sphere;
-import ar.edu.itba.gc.texture.ChessTexture;
 import ar.edu.itba.gc.texture.ConstantColor;
 import ar.edu.itba.gc.texture.ImageTexture;
 import ar.edu.itba.gc.tracer.Tracer;
@@ -68,7 +69,7 @@ public class World {
 	}
 
 	public void build() {
-		camera = new PinholeCamera(new Vector3d(0, 300, 1000), new Vector3d(0,
+		camera = new PinholeCamera(new Vector3d(0, 500, 2000), new Vector3d(0,
 				0, 0), new Vector3d(0, 1, 0), 1000.0, 1.0, 1.0);
 		camera.computeUVW();
 
@@ -83,9 +84,9 @@ public class World {
 
 		// this.addLight(DirectionalLight.downWhite());
 
-		// this.addLight(new PointLight(1, new Vector3d(100, 700, 200)));
+		 this.addLight(new PointLight(1, new Vector3d(0, 300, 300)));
 
-		this.addLight(new PointLight(3, new Vector3d(0, 300, 200)));
+//		this.addLight(new PointLight(1, new Vector3d(100, 300, 200)));
 		// this.addLight(new PointLight(8, new Vector3d(500, 700, 0)));
 		File f = new File("chess.png");
 		BufferedImage img;
@@ -111,22 +112,29 @@ public class World {
 			// Phong greenPhong = new Phong(this, 0.25, 0.6, 0.2, 5,
 			// new ConstantColor(RGBColor.green()), vp.getSampler());
 
-			// Transparent vidrio = new Transparent(this, 0.25, 0.2, 0,
-			// 2000, new ConstantColor(RGBColor.green()), vp.getSampler(),
-			// 1.5, 0.05, 0.95, RGBColor.white());
+			 Transparent vidrio = new Transparent(this, 0.25, 0.2, 0,
+			 2000, new ConstantColor(RGBColor.black()), vp.getSampler(),
+			 1.5, 0.05, 0.95, new RGBColor(0.65));
 
-			Matte greenMatte = new Matte(this, 0, 1, new ConstantColor(
+			Matte greenMatte = new Matte(this, 0.1, 1, new ConstantColor(
 					RGBColor.green()), vp.getSampler());
-			Matte redMatte = new Matte(this, 0, 1, new ConstantColor(
+			Matte redMatte = new Matte(this, 0.1, 1, new ConstantColor(
 					RGBColor.red()), vp.getSampler());
 
 			Instance plane = new Instance(new Plane(chessMatte, new Vector3d(0,
 					0, 0), new Vector3d(0, 1, 0)));
-			Instance sphere1 = new Instance(new Sphere(mirror));
+			Instance sphere1 = new Instance(new Sphere(vidrio));
+			
+			Box b = new Box(greenMatte, new Vector3d(-50, 0, -50), new Vector3d(50, 100, 50));
+			Instance box = new Instance(b);
 
-			plane.translate(-1000, 0, -1000);
+//			plane.rotateY(45);
 			sphere1.scale(100, 100, 100);
 			sphere1.translate(0, 100, 0);
+//			box.scale(2, 2, 2);
+//			plane.translate(500, 0, 0);
+			box.rotateY(45);
+			box.translate(300, 0, 0);
 
 			addObject(sphere1);
 			addObject(plane);

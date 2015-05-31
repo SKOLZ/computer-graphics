@@ -125,8 +125,7 @@ public class Instance extends GeometricObject {
 	public double shadowHit(Ray ray) {
 		Ray invRay = new Ray(ray.getOrigin(), ray.getDirection());
 		invRay.setOrigin(Matrixes.matrixMultPoint(invMatrix, ray.getOrigin()));
-		invRay.setDirection(Matrixes.matrixMultVector(invMatrix,
-				ray.getDirection()));
+		invRay.setDirection(Matrixes.matrixMultVector(invMatrix, ray.getDirection()));
 		return geometricObject.shadowHit(invRay);
 	}
 
