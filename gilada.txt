@@ -36,18 +36,17 @@ MakeNamedMaterial "mirror-white"
 LightSource "point"
 	"float gain" [3]
 	"color L" [1 1 1]
-	"point from" [0 200 300]
+	"point from" [0 300 500]
 
 LightSource "infinite"
 	"color L" [0 0 0]
 
 AttributeBegin
 TransformBegin
-	Rotate 90 1 0 0
 	Scale .100 .100 .100
 	Translate 0 100 0
 TransformEnd
-NamedMaterial "matte-red"
+NamedMaterial "mirror-white"
 Shape "sphere"
 	"float radius" [1.0]
 AttributeEnd
