@@ -96,7 +96,6 @@ public class Mesh extends GeometricObject {
 
 	@Override
 	public double shadowHit(Ray ray) {
-		// return tree.shadowHit(ray);
 		return 0;
 	}
 

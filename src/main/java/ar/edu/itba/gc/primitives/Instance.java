@@ -11,7 +11,6 @@ import ar.edu.itba.gc.util.ShadeRec;
 public class Instance extends GeometricObject {
 
 	private GeometricObject geometricObject;
-	// private KDNode<GeometricObject> tree;
 	private Matrix4d invMatrix;
 	private Matrix4d invTransMatrix;
 	private Matrix4d matrix;
@@ -23,7 +22,6 @@ public class Instance extends GeometricObject {
 	public Instance(GeometricObject geometricObject) {
 		super();
 		this.geometricObject = geometricObject;
-		// this.tree = KDNode.build(Lists.newArrayList(geometricObject));
 		this.matrix = Matrixes.newIdenty4d();
 		updateMatrixes();
 
@@ -125,7 +123,8 @@ public class Instance extends GeometricObject {
 	public double shadowHit(Ray ray) {
 		Ray invRay = new Ray(ray.getOrigin(), ray.getDirection());
 		invRay.setOrigin(Matrixes.matrixMultPoint(invMatrix, ray.getOrigin()));
-		invRay.setDirection(Matrixes.matrixMultVector(invMatrix, ray.getDirection()));
+		invRay.setDirection(Matrixes.matrixMultVector(invMatrix,
+				ray.getDirection()));
 		return geometricObject.shadowHit(invRay);
 	}
 

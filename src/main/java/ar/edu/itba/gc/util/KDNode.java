@@ -10,16 +10,8 @@ import ar.edu.itba.gc.primitives.GeometricObject;
 
 public class KDNode<T extends GeometricObject> {
 
-	public int count;
-
 	public static <T extends GeometricObject> KDNode<T> build(List<T> objs) {
-		long start = System.currentTimeMillis();
-
-		KDNode<T> node = buildInternal(objs);
-
-		System.out.println("Tree build time: "
-				+ (System.currentTimeMillis() - start) + "ms");
-		return node;
+		return buildInternal(objs);
 	}
 
 	private static <T extends GeometricObject> KDNode<T> buildInternal(
@@ -147,6 +139,33 @@ public class KDNode<T extends GeometricObject> {
 				if (hits && t < tmin) {
 					return t;
 				}
+			}
+		}
+		return -1.0;
+	}
+
+	public double shadowHit(Ray ray) {
+		if (this.right.objs.isEmpty() && this.left.objs.isEmpty()) {
+			Double minT = Double.MAX_VALUE;
+			boolean hits = false;
+			for (GeometricObject obj : objs) {
+				double aux = obj.shadowHit(ray);
+				if (aux > 0 && aux < minT) {
+					hits = true;
+					minT = aux;
+				}
+			}
+			return hits ? minT : -1.0;
+		} else {
+			double leftT = this.left.shadowHit(ray);
+			double rightT = this.right.shadowHit(ray);
+			if (leftT > 0.0) {
+				if (rightT < 0.0 || rightT > leftT) {
+					return leftT;
+				}
+			}
+			if (rightT > 0.0) {
+				return rightT;
 			}
 		}
 		return -1.0;

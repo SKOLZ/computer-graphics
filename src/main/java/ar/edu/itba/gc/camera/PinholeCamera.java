@@ -1,6 +1,9 @@
 package ar.edu.itba.gc.camera;
 
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
@@ -53,33 +56,50 @@ public class PinholeCamera extends Camera {
 
 	@Override
 	public BufferedImage renderScene(World w) {
+		List<CompletableFuture<?>> futures = new LinkedList<CompletableFuture<?>>();
 		w.vp.setPixelSize(w.vp.getPixelSize() / zoom);
-
 		BufferedImage img = new BufferedImage(w.vp.getHorizontalRes(),
 				w.vp.getVerticalRes(), BufferedImage.TYPE_INT_RGB);
 		Ray ray = new Ray();
 		ray.setOrigin(getEye());
 		for (int r = 0; r < w.vp.getVerticalRes(); r++) {
 			for (int c = 0; c < w.vp.getHorizontalRes(); c++) {
-				RGBColor l = RGBColor.black();
-				for (int i = 0; i < w.vp.getSampleNum(); i++) {
-					Vector2d samplePoint = w.vp.getSampler().sampleUnitSquare();
-					double x = w.vp.getPixelSize()
-							* (c - (w.vp.getHorizontalRes() * 0.5) + samplePoint.x);
-
-					double y = w.vp.getPixelSize()
-							* (r - (w.vp.getVerticalRes() * 0.5) + samplePoint.y);
-					ray.setDirection(getRayDirection(new Vector2d(x, y)));
-
-					l.sum(w.tracer.traceRay(ray, 0));
-				}
-				l.divide(w.vp.getSampleNum());
-				l.mult(getExposureTime());
-				displayPixel(r, c, l, img, w.vp);
+				futures.add(CompletableFuture.runAsync(this.run(r, c, ray, img,
+						w)));
 			}
 		}
 
+		for (CompletableFuture<?> future : futures) {
+			try {
+				future.get();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			;
+		}
+
 		return img;
+	}
+
+	private Runnable run(int r, int c, Ray ray, BufferedImage img, World w) {
+		return () -> {
+			RGBColor l = RGBColor.black();
+
+			for (int i = 0; i < w.vp.getSampleNum(); i++) {
+				Vector2d samplePoint = w.vp.getSampler().sampleUnitSquare();
+				double x = w.vp.getPixelSize()
+						* (c - (w.vp.getHorizontalRes() * 0.5) + samplePoint.x);
+
+				double y = w.vp.getPixelSize()
+						* (r - (w.vp.getVerticalRes() * 0.5) + samplePoint.y);
+				ray.setDirection(getRayDirection(new Vector2d(x, y)));
+
+				l.sum(w.tracer.traceRay(ray, 0));
+			}
+			l.divide(w.vp.getSampleNum());
+			l.mult(getExposureTime());
+			displayPixel(r, c, l, img, w.vp);
+		};
 	}
 
 	private void displayPixel(int i, int j, final RGBColor pixelColor,
