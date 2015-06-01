@@ -1,7 +1,6 @@
 package ar.edu.itba.gc.mapping;
 
 import javax.vecmath.Point2d;
-import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
 public class RectangularMap extends Mapping {
