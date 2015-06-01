@@ -132,4 +132,28 @@ public class BoundingBox {
 		}
 	}
 
+	double getX0() {
+		return x0;
+	}
+
+	double getX1() {
+		return x1;
+	}
+
+	double getY0() {
+		return y0;
+	}
+
+	double getY1() {
+		return y1;
+	}
+
+	double getZ0() {
+		return z0;
+	}
+
+	double getZ1() {
+		return z1;
+	}
+
 }

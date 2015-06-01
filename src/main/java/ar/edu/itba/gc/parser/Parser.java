@@ -15,12 +15,6 @@ public class Parser {
 	private GlobalParser globalParser = new GlobalParser();
 	private WorldParser worldParser = new WorldParser();
 
-	public static void main(String[] args) throws IOException {
-		new Parser().parse("mesh.txt", 2, 10);
-		World w = World.getInstance();
-		w.renderScene("MyFile.png");
-	}
-
 	public void parse(String path, int aaSamples, int depth) throws IOException {
 		World w = World.getInstance();
 
@@ -47,6 +41,16 @@ public class Parser {
 				line = scanner.nextLine();
 				if (line.startsWith("WorldEnd"))
 					break;
+				if (line.startsWith("Include")) {
+					String includedPath = line.split(" ")[1].replaceAll("\"",
+							"");
+					Scanner auxScanner = new Scanner(Paths.get(includedPath),
+							"UTF-8");
+					while (auxScanner.hasNext()) {
+						world.append(auxScanner.nextLine()).append("\n");
+					}
+					auxScanner.close();
+				}
 				world.append(line).append("\n");
 			}
 

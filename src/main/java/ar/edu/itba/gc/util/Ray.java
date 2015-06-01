@@ -7,7 +7,6 @@ import ar.edu.itba.gc.world.World;
 
 public class Ray {
 
-	public static int count = 0;
 	private Vector3d origin;
 	private Vector3d direction;
 	private int depth;
@@ -46,7 +45,6 @@ public class Ray {
 	}
 
 	public ShadeRec hit(World world) {
-		count++;
 		ShadeRec sr = new ShadeRec(world);
 		double t = Double.MAX_VALUE;
 		for (GeometricObject obj : world.getObjects()) {

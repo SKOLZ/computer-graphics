@@ -1,0 +1,17 @@
+Texture "Kd_lizardon" "color" "imagemap"
+	"string filename" ["charizard.jpg"]
+	"string mapping" ["uv"]
+
+Texture "Kd_red" "color" "constant"
+	"color value" [1.0 0.0 0.0]
+
+MakeNamedMaterial "mat_1"
+	"texture Kd" ["Kd_lizardon"]
+	"string type" ["matte"]
+
+Texture "Kd_white" "color" "constant"
+	"color value" [0.0 0.0 1.0]
+
+MakeNamedMaterial "mirror-white"
+	"texture Kd" ["Kd_white"]
+	"string type" ["matte"]

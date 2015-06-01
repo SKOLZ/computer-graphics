@@ -13,6 +13,7 @@ import ar.edu.itba.gc.light.Light;
 import ar.edu.itba.gc.primitives.GeometricObject;
 import ar.edu.itba.gc.tracer.Tracer;
 import ar.edu.itba.gc.tracer.WhittedTracer;
+import ar.edu.itba.gc.util.KDNode;
 import ar.edu.itba.gc.util.RGBColor;
 
 public class World {
@@ -33,7 +34,7 @@ public class World {
 	public ViewPlane vp;
 	public RGBColor background;
 	public List<GeometricObject> objects;
-	// public KDNode<GeometricObject> tree;
+	public KDNode<GeometricObject> tree;
 	public List<Light> lights;
 	public Light ambientLight;
 	public Tracer tracer;
@@ -55,6 +56,7 @@ public class World {
 	}
 
 	public void renderScene(String outputPath) {
+//		tree = KDNode.build(this.objects);
 		saveImage(camera.renderScene(this), outputPath);
 	}
 

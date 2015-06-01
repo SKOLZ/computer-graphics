@@ -1,0 +1,23 @@
+LookAt 7.481132 -6.507640 5.343665 6.826270 -5.896974 4.898420 -0.317370 0.312469 0.895343
+Camera "perspective"
+	"float focaldistance" [700]
+
+Film "fleximage"
+	"integer xresolution" [640]
+	"integer yresolution" [480]
+	"float gamma" [1]
+
+WorldBegin
+
+LightSource "point"
+	"float gain" [3]
+	"color L" [1 1 1]
+	"point from" [-10 10 20]
+
+LightSource "infinite"
+	"color L" [1 1 1]
+
+Include "materials.lxm"
+Include "geometry.lxo"
+
+WorldEnd
