@@ -8,7 +8,7 @@ Film "fleximage"
 	"float gamma" [1]
 
 WorldBegin
-
+		
 LightSource "point"
 	"float gain" [3]
 	"color L" [1 1 1]

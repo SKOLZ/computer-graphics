@@ -39,19 +39,22 @@ public class Parser {
 
 			while (scanner.hasNext()) {
 				line = scanner.nextLine();
-				if (line.startsWith("WorldEnd"))
-					break;
-				if (line.startsWith("Include")) {
-					String includedPath = line.split(" ")[1].replaceAll("\"",
-							"");
-					Scanner auxScanner = new Scanner(Paths.get(includedPath),
-							"UTF-8");
-					while (auxScanner.hasNext()) {
-						world.append(auxScanner.nextLine()).append("\n");
+				if (!line.startsWith(" ") && !line.startsWith("\t\t")
+						&& !line.equals("\t")) {
+					if (line.startsWith("WorldEnd"))
+						break;
+					if (line.startsWith("Include")) {
+						String includedPath = line.split(" ")[1].replaceAll(
+								"\"", "");
+						Scanner auxScanner = new Scanner(
+								Paths.get(includedPath), "UTF-8");
+						while (auxScanner.hasNext()) {
+							world.append(auxScanner.nextLine()).append("\n");
+						}
+						auxScanner.close();
 					}
-					auxScanner.close();
+					world.append(line).append("\n");
 				}
-				world.append(line).append("\n");
 			}
 
 			worldParser.parse(world.toString(), w);
