@@ -27,6 +27,8 @@ public class ShapeParser {
 			return SphereParser.instance().parse(scanner);
 		case "mesh":
 			return MeshParser.instance().parse(scanner);
+		case "box":
+			return BoxParser.instance().parse(scanner);
 		default:
 			throw new IllegalArgumentException("Invalid shape type");
 		}

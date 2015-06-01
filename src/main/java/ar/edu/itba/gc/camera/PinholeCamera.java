@@ -64,8 +64,8 @@ public class PinholeCamera extends Camera {
 		ray.setOrigin(getEye());
 		for (int r = 0; r < w.vp.getVerticalRes(); r++) {
 			for (int c = 0; c < w.vp.getHorizontalRes(); c++) {
-				futures.add(CompletableFuture.runAsync(this.run(r, c, ray, img,
-						w)));
+				futures.add(CompletableFuture.runAsync(this
+						.run(r, c, ray, img, w)));
 			}
 		}
 
@@ -73,15 +73,15 @@ public class PinholeCamera extends Camera {
 			try {
 				future.get();
 			} catch (Exception e) {
-				e.printStackTrace();
+				System.out.println("holis");
 			}
-			;
 		}
 
 		return img;
 	}
 
-	private Runnable run(int r, int c, Ray ray, BufferedImage img, World w) {
+	private Runnable run(final int r, final int c, final Ray ray,
+			BufferedImage img, World w) {
 		return () -> {
 			RGBColor l = RGBColor.black();
 

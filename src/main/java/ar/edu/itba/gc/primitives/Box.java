@@ -13,6 +13,15 @@ public class Box extends GeometricObject {
 	private double x0, y0, z0;
 	private double x1, y1, z1;
 
+	public Box(double height, double width, double depth) {
+		this.x0 = -width / 2;
+		this.x1 = width / 2;
+		this.y0 = -height / 2;
+		this.y1 = height / 2;
+		this.z0 = -depth / 2;
+		this.z1 = depth / 2;
+	}
+
 	public Box(Material material, Vector3d p0, Vector3d p1) {
 		super(material);
 		this.x0 = p0.x;
@@ -91,8 +100,9 @@ public class Box extends GeometricObject {
 				tmin = t1;
 				sr.setNormal(getNormal(faceOut));
 			}
-			Vector3d hitPoint = Vectors.plus(origin, Vectors.scale(direction, tmin));
-			
+			Vector3d hitPoint = Vectors.plus(origin,
+					Vectors.scale(direction, tmin));
+
 			sr.setHitsAnObject(true);
 			sr.setMaterial(this.getMaterial());
 			sr.setHitPoint(hitPoint);
@@ -198,9 +208,9 @@ public class Box extends GeometricObject {
 
 	@Override
 	public Vector3d getCentroid() {
-		double midx = Math.abs(x0 - x1)/2;
-		double midy = Math.abs(y0 - y1)/2;
-		double midz = Math.abs(z0 - z1)/2;
+		double midx = Math.abs(x0 - x1) / 2;
+		double midy = Math.abs(y0 - y1) / 2;
+		double midz = Math.abs(z0 - z1) / 2;
 		return new Vector3d(midx, midy, midz);
 	}
 
