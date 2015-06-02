@@ -1,0 +1,72 @@
+LookAt -800 300 1500 400 0 0 0 1 0
+
+Camera "perspective"
+	"float focaldistance" [1000.0]
+
+Film "fleximage"
+	"integer xresolution" [600]
+	"integer yresolution" [300]
+	"float gamma" [2.200000000000000]
+
+WorldBegin
+
+Texture "Kd_red" "color" "constant"
+	"color value" [1.0 0.0 0.0]
+
+Texture "Kd_blue" "color" "constant"
+	"color value" [0.0 0.0 1.0]
+
+Texture "Kd_white" "color" "constant"
+	"color value" [1.0 1.0 1.0]
+
+MakeNamedMaterial "mirror-white"
+	"texture Kr" ["Kd_white"]
+	"string type" ["mirror"]
+
+MakeNamedMaterial "metal-blue"
+	"texture Kr" ["Kd_blue"]
+	"float uroughness" [0.01]
+	"string type" ["metal2"]
+
+MakeNamedMaterial "matte-red"
+	"texture Kd" ["Kd_red"]
+	"string type" ["matte"]
+
+
+LightSource "point"
+	"float gain" [2]
+	"color L" [1 1 1]
+	"point from" [400 600 700]
+
+LightSource "infinite"
+	"color L" [0 0 0]
+
+AttributeBegin
+TransformBegin
+	Scale .100 .100 .100
+	Translate 0 100 300
+TransformEnd
+NamedMaterial "metal-blue"
+Shape "sphere"
+	"float radius" [1.0]
+AttributeEnd
+
+AttributeBegin
+NamedMaterial "matte-red"
+Shape "plane"
+	"normal n" [0 1 0]
+AttributeEnd
+
+AttributeBegin
+TransformBegin
+	Scale .300 .300 .300
+	Translate 400 150 350
+TransformEnd
+NamedMaterial "mirror-white"
+Shape "box"
+	"float width" [1]
+	"float height" [1]
+	"float depth" [1]
+AttributeEnd
+
+WorldEnd

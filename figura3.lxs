@@ -1,0 +1,80 @@
+LookAt 0 300 800 0 0 0 0 1 0
+
+Camera "perspective"
+	"float focaldistance" [500.0]
+
+Film "fleximage"
+	"integer xresolution" [600]
+	"integer yresolution" [300]
+	"float gamma" [2.200000000000000]
+
+WorldBegin
+
+Texture "Kd_wood" "color" "imagemap"
+	"string filename" ["wood.png"]
+	"string mapping" ["planar"]
+
+Texture "Kd_ruby" "color" "imagemap"
+	"string filename" ["ruby.png"]
+	"string mapping" ["planar"]
+
+Texture "Kd_moon" "color" "imagemap"
+	"string filename" ["moon.png"]
+	"string mapping" ["spherical"]
+
+Texture "Kd_world" "color" "imagemap"
+	"string filename" ["world.png"]
+	"string mapping" ["spherical"]	
+
+MakeNamedMaterial "matte-wood"
+	"texture Kd" ["Kd_wood"]
+	"string type" ["matte"]
+
+
+MakeNamedMaterial "matte-ruby"
+	"texture Kd" ["Kd_ruby"]
+	"string type" ["matte"]
+
+MakeNamedMaterial "matte-moon"
+	"texture Kd" ["Kd_moon"]
+	"string type" ["matte"]
+
+MakeNamedMaterial "matte-world"
+	"texture Kd" ["Kd_world"]
+	"string type" ["matte"]
+
+LightSource "point"
+	"float gain" [1]
+	"color L" [1 1 1]
+	"point from" [200 500 1000]
+
+LightSource "infinite"
+	"color L" [0 0 0]
+
+AttributeBegin
+TransformBegin
+	Scale .100 .100 .100
+	Translate -300 100 0
+TransformEnd
+NamedMaterial "matte-moon"
+Shape "sphere"
+	"float radius" [1.0]
+AttributeEnd
+
+AttributeBegin
+TransformBegin
+	Scale .100 .100 .100
+	Translate 300 100 0
+TransformEnd
+NamedMaterial "matte-world"
+Shape "sphere"
+	"float radius" [1.0]
+AttributeEnd
+
+AttributeBegin
+NamedMaterial "matte-wood"
+Shape "plane"
+	"normal n" [0 1 0]
+AttributeEnd
+
+WorldEnd

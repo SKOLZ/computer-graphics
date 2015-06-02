@@ -64,8 +64,8 @@ public class PinholeCamera extends Camera {
 		ray.setOrigin(getEye());
 		for (int r = 0; r < w.vp.getVerticalRes(); r++) {
 			for (int c = 0; c < w.vp.getHorizontalRes(); c++) {
-				futures.add(CompletableFuture.runAsync(this
-						.run(r, c, ray, img, w)));
+				futures.add(CompletableFuture.runAsync(this.run(r, c, ray, img,
+						w)));
 			}
 		}
 
@@ -73,7 +73,7 @@ public class PinholeCamera extends Camera {
 			try {
 				future.get();
 			} catch (Exception e) {
-				System.out.println("holis");
+				e.printStackTrace();
 			}
 		}
 
