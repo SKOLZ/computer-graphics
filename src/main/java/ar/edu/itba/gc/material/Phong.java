@@ -30,7 +30,7 @@ public class Phong extends Matte {
 	public RGBColor shade(ShadeRec sr) {
 		Vector3d wo = Vectors.scale(sr.getDirection(), -1);
 		RGBColor ret = RGBColor.mult(getAmbientBRDF().rho(sr),
-				getWorld().ambientLight.L());
+				getWorld().ambientLight.L(sr));
 
 		for (Light l : getWorld().lights) {
 			Vector3d wi = l.getDirection(sr);
@@ -46,7 +46,7 @@ public class Phong extends Matte {
 							getDiffuseBRDF().f(sr, wo, wi),
 							this.specularBRDF.f(sr, wo, wi));
 					ret = RGBColor.sum(ret, RGBColor.mult(
-							RGBColor.mult(brdfColor, l.L()), ndotwi));
+							RGBColor.mult(brdfColor, l.L(sr)), ndotwi));
 				}
 			}
 		}

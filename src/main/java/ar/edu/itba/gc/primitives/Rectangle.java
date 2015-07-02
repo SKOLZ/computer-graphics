@@ -1,85 +1,103 @@
-//package ar.edu.itba.gc.primitives;
-//
-//import javax.vecmath.Vector3d;
-//
-//import ar.edu.itba.gc.material.Material;
-//import ar.edu.itba.gc.util.ShadeRec;
-//import ar.edu.itba.gc.util.Vectors;
-//
-//public class Rectangle extends Plane {
-//
-//	private Vector3d corner;
-//	private Vector3d sideA;
-//	private Vector3d sideB;
-//	private double aLengthSquared;
-//	private double bLengthSquared;
-//
-//	public Rectangle(Vector3d sideA, Vector3d sideB, double aLength,
-//			double bLength, Material material, Vector3d point, Vector3d normal) {
-//		super(material, point, normal);
-//		this.sideA = sideA;
-//		this.sideB = sideB;
-//		this.aLengthSquared = aLength * aLength;
-//		this.bLengthSquared = bLength * bLength;
-//	}
-//
-//	// TODO: Arreglar viejaaa
-//
-//	@Override
-//	public double hit(ShadeRec sr, double tmin, Vector3d origin, Vector3d direction) {
-//		ShadeRec auxSr = super.hit(sr, origin, direction);
-//		if (auxSr.getT() > 0.0) {
-//			Vector3d p = Vectors.plus(origin,
-//					Vectors.scale(direction, auxSr.getT()));
-//			Vector3d d = Vectors.sub(p, corner);
-//
-//			double ddota = d.dot(sideA);
-//
-//			if (ddota < 0.0 || ddota > aLengthSquared) {
-//				return sr;
-//			}
-//
-//			double ddotb = d.dot(sideB);
-//
-//			if (ddotb < 0.0 || ddotb > bLengthSquared) {
-//				return sr;
-//			}
-//		}
-//
-//		return auxSr;
-//	}
-//
-//	@Override
-//	public boolean equals(Object obj) {
-//		if (this == obj)
-//			return true;
-//		if (!super.equals(obj))
-//			return false;
-//		if (getClass() != obj.getClass())
-//			return false;
-//		Rectangle other = (Rectangle) obj;
-//		if (Double.doubleToLongBits(aLengthSquared) != Double
-//				.doubleToLongBits(other.aLengthSquared))
-//			return false;
-//		if (Double.doubleToLongBits(bLengthSquared) != Double
-//				.doubleToLongBits(other.bLengthSquared))
-//			return false;
-//		if (corner == null) {
-//			if (other.corner != null)
-//				return false;
-//		} else if (!corner.equals(other.corner))
-//			return false;
-//		if (sideA == null) {
-//			if (other.sideA != null)
-//				return false;
-//		} else if (!sideA.equals(other.sideA))
-//			return false;
-//		if (sideB == null) {
-//			if (other.sideB != null)
-//				return false;
-//		} else if (!sideB.equals(other.sideB))
-//			return false;
-//		return true;
-//	}
-//
-//}
+package ar.edu.itba.gc.primitives;
+
+import javax.vecmath.Vector2d;
+import javax.vecmath.Vector3d;
+
+import ar.edu.itba.gc.material.Material;
+import ar.edu.itba.gc.sampler.Sampler;
+import ar.edu.itba.gc.util.Constants;
+import ar.edu.itba.gc.util.Ray;
+import ar.edu.itba.gc.util.ShadeRec;
+import ar.edu.itba.gc.util.Vectors;
+
+public class Rectangle extends EmisiveObject {
+
+
+	private Vector3d p0;
+	private Vector3d a;
+	private Vector3d b;
+	private Vector3d normal;
+	private Sampler sampler;
+	private double invArea;
+
+	public Rectangle(Material material, Vector3d p0, Vector3d a, Vector3d b, Vector3d normal, Sampler sampler) {
+		super(material);
+		this.p0 = p0;
+		this.a = a;
+		this.b = b;
+		this.normal = normal;
+		this.sampler = sampler;
+		this.invArea = 1 / (a.length() * b.length());
+	}
+	
+	public Vector3d sample() {
+		Vector2d samplePoint = sampler.sampleUnitSquare();
+		return Vectors.plus(
+				Vectors.plus(p0, Vectors.scale(a, samplePoint.x)), 
+				Vectors.scale(b, samplePoint.y));
+	}
+	
+	public double pdf(ShadeRec sr) {
+		return invArea;
+	}
+	
+	public Vector3d getNormal(Vector3d p) {
+		return normal;
+	}
+	@Override
+	public double hit(ShadeRec sr, double tmin, Vector3d origin,
+			Vector3d direction) {
+		double t = Vectors.sub(p0, origin).dot(normal) / direction.dot(normal);
+		if (t < Constants.KEPS) {
+			return -1;
+		}
+		Vector3d p = Vectors.plus(origin, Vectors.scale(direction, t));
+		Vector3d d = Vectors.sub(p, p0);
+		double ddota = d.dot(a);
+		if (ddota < 0 || ddota > a.lengthSquared()) {
+			return -1;
+		}
+		double ddotb = d.dot(b);
+		if (ddotb < 0 || ddotb > b.lengthSquared()) {
+			return -1;			
+		}
+		tmin = t;
+		sr.setNormal(normal);
+		sr.setLocalHitPoint(p);
+		sr.setHitPoint(p);
+		sr.setHitsAnObject(true);
+		return tmin;
+	}
+
+	@Override
+	public double shadowHit(Ray ray) {
+		double t = Vectors.sub(p0, ray.getOrigin()).dot(normal) / ray.getDirection().dot(normal);
+		if (t < Constants.KEPS) {
+			return -1;
+		}
+		Vector3d p = Vectors.plus(ray.getOrigin(), Vectors.scale(ray.getDirection(), t));
+		Vector3d d = Vectors.sub(p, p0);
+		double ddota = d.dot(a);
+		if (ddota < 0 || ddota > a.lengthSquared()) {
+			return -1;
+		}
+		double ddotb = d.dot(b);
+		if (ddotb < 0 || ddotb > b.lengthSquared()) {
+			return -1;			
+		}
+		return t;
+	}
+
+	@Override
+	public BoundingBox getBoundingBox() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Vector3d getCentroid() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

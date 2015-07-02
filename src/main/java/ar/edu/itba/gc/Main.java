@@ -12,9 +12,12 @@ public class Main {
 		String outputPath = null;
 		String inputPath = null;
 		boolean displayTime = false;
-		int aaSamples = -1;
+		boolean usePathTracer = false;
+		int samples = -1;
 		int renderAmount = 1;
 		int depth = 1;
+		int traceDepth = -1;
+		int ptPixelSamples = -1;
 		
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
@@ -29,9 +32,9 @@ public class Main {
 				break;
 			case "-aa":
 				try {
-					aaSamples = Integer.parseInt(args[i + 1]);
+					samples = Integer.parseInt(args[i + 1]);
 				} catch (NumberFormatException e) {
-					aaSamples = -1;
+					samples = -1;
 				}
 				break;
 			case "-benchmark":
@@ -47,11 +50,32 @@ public class Main {
 					depth = -1;
 				}
 				break;
+			case "-pathtracer":
+				usePathTracer = true;
+				break;
+			case "-tr":
+				try {
+					traceDepth = Integer.parseInt(args[i + 1]);
+				} catch (NumberFormatException e) { 
+					depth = -1;
+				}
+				break;
+			case "-s":
+				try {
+					ptPixelSamples = Integer.parseInt(args[i + 1]);
+				} catch (NumberFormatException e) { 
+					ptPixelSamples = -1;
+				}
+				break;				
 			default:
 				break;
 			}
 		}
-		if (aaSamples == -1 || inputPath == null) {
+		if (usePathTracer && (ptPixelSamples == -1 || traceDepth == -1)) {
+			System.out.println("pixel samples or tracedepth not specified for raytracer");
+			return;
+		}
+		if (samples == -1 || inputPath == null) {
 			System.out.println("Antialiasing or input path not specified");
 			return;
 		}
@@ -61,8 +85,13 @@ public class Main {
 		}
 		
 		Parser parser = new Parser();
-		parser.parse(inputPath, aaSamples, depth);
+		if(usePathTracer) {
+			samples = ptPixelSamples;
+			depth = traceDepth;
+		}
+		parser.parse(inputPath, samples, depth, usePathTracer);
 		World w = World.getInstance();
+		
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < renderAmount; i++) {
 			w.renderScene(outputPath);			

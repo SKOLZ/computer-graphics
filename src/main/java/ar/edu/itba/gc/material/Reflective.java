@@ -34,8 +34,20 @@ public class Reflective extends Phong {
 						fr,
 						sr.getWorld().tracer.traceRay(reflectedRay,
 								sr.getDepth() + 1)), sr.getNormal().dot(wi)));
-
 		return l;
+	}
+	
+	public RGBColor globalShade(ShadeRec sr) {
+		Vector3d wo = Vectors.scale(sr.getDirection(), -1);
+		Vector3d wi = new Vector3d();
+		double pdf;
+		RGBColor fr = reflectiveBRDF.pathtracingSampleF(sr, wo, wi);
+		Ray reflectedRay = new Ray(sr.getHitPoint(), wi);
+		if (sr.getDepth() == 0) {
+			return RGBColor.mult(RGBColor.mult(fr, sr.getWorld().tracer.traceRay(reflectedRay, sr.getDepth() + 2)), (sr.getNormal().dot(wi)) / sr.getPdf()); //quilombo
+		} else {
+			return RGBColor.mult(RGBColor.mult(fr, sr.getWorld().tracer.traceRay(reflectedRay, sr.getDepth() + 1)), (sr.getNormal().dot(wi)) / sr.getPdf()); //quilombo
+		}
 	}
 
 }

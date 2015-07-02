@@ -26,6 +26,10 @@ abstract class BRDF {
 		return RGBColor.black();
 	}
 	
+	RGBColor pathtracingSampleF(ShadeRec sr, Vector3d wo, Vector3d wi) {
+		return RGBColor.black();
+	}
+	
 	void setSampler(Sampler sampler, double exp) {
 		this.sampler = sampler;
 		this.sampler.mapSamplesToHemisphere(exp);

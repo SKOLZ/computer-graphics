@@ -30,11 +30,23 @@ class PerfectSpecular extends BRDF {
 	RGBColor sampleF(ShadeRec sr, Vector3d wo, Vector3d wi) {
 		double ndotwo = sr.getNormal().dot(wo);
 		Vector3d auxWi = Vectors.plus(Vectors.scale(wo, -1),
-				Vectors.scale(Vectors.scale(sr.getNormal(), ndotwo), 2.0));
+				Vectors.scale(Vectors.scale(sr.getNormal(), 2.0), ndotwo));
 		wi.x = auxWi.x;
 		wi.y = auxWi.y;
 		wi.z = auxWi.z;
 		return (RGBColor.mult(cr, kr / Math.abs(sr.getNormal().dot(wi))));
+	}
+	
+	@Override
+	RGBColor pathtracingSampleF(ShadeRec sr, Vector3d wo, Vector3d wi) {
+		double ndotwo = sr.getNormal().dot(wo);
+		Vector3d auxWi = Vectors.plus(Vectors.scale(wo, -1),
+				Vectors.scale(Vectors.scale(sr.getNormal(), 2.0), ndotwo));
+		wi.x = auxWi.x;
+		wi.y = auxWi.y;
+		wi.z = auxWi.z;
+		sr.setPdf(sr.getNormal().dot(wi));
+		return RGBColor.mult(cr, kr);
 	}
 
 }

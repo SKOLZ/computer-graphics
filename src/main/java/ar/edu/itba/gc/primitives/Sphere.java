@@ -7,12 +7,14 @@ import ar.edu.itba.gc.util.Constants;
 import ar.edu.itba.gc.util.Ray;
 import ar.edu.itba.gc.util.ShadeRec;
 import ar.edu.itba.gc.util.Vectors;
+import ar.edu.itba.gc.world.World;
 
-public class Sphere extends GeometricObject {
+public class Sphere extends EmisiveObject {
 
 	private Vector3d center;
 	private double radius;
-
+	private double invArea;
+	
 	public Sphere(double radius) {
 		this(null, new Vector3d(0, 0, 0), radius);
 	}
@@ -21,12 +23,14 @@ public class Sphere extends GeometricObject {
 		super(material);
 		this.center = center;
 		this.radius = radius;
+		this.invArea = 1/(4 * World.PI * radius * radius);
 	}
 
 	public Sphere(Material material) {
 		super(material);
 		this.center = new Vector3d(0, 0, 0);
 		this.radius = 1.0;
+		this.invArea = 1/(4 * World.PI * radius * radius);
 	}
 
 	public Vector3d getCenter() {
@@ -166,6 +170,22 @@ public class Sphere extends GeometricObject {
 				.doubleToLongBits(other.radius))
 			return false;
 		return true;
+	}
+
+	@Override
+	public Vector3d getNormal(Vector3d samplePoint) {
+		return Vectors.scale(Vectors.sub(samplePoint, center), 1 / radius);
+	}
+
+	@Override
+	public Vector3d sample() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public double pdf(ShadeRec sr) {
+		return invArea;
 	}
 
 }

@@ -1,9 +1,14 @@
 package ar.edu.itba.gc.sampler;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
+
+import ar.edu.itba.gc.world.World;
+
+import com.google.common.collect.Lists;
 
 public abstract class Sampler {
 
@@ -12,6 +17,7 @@ public abstract class Sampler {
 	private int numSets;
 	private int jump;
 	private Vector2d[] samples;
+	private ArrayList<Vector3d> hemisphereSamples;
 	private int[] shuffledIndices;
 
 	public Sampler() {
@@ -32,6 +38,10 @@ public abstract class Sampler {
 		setupShuffledIndices();
 	}
 
+	public ArrayList<Vector3d> getHemisphereSamples() {
+		return hemisphereSamples;
+	}
+	
 	public int getSampleNum() {
 		return sampleNum;
 	}
@@ -46,6 +56,20 @@ public abstract class Sampler {
 		}
 		return samples[jump
 				+ shuffledIndices[(int) (jump + count++ % sampleNum)]];
+	}
+	
+	public void mapSamplesToHemisphere(double e) {
+		hemisphereSamples = Lists.newArrayList();
+		for (Vector2d sample : samples) {
+			double cosPhi = Math.cos(2.0 * World.PI * sample.x);
+			double sinPhi = Math.sin(2.0 * World.PI * sample.x);
+			double cosTheta = Math.pow(1 - sample.y, 1.0 / (e + 1.0));
+			double sinTheta = Math.sqrt(1 - cosTheta * cosTheta);
+			double pu = sinTheta * cosPhi;
+			double pv = sinTheta * sinPhi;
+			double pw = cosTheta;
+			hemisphereSamples.add(new Vector3d(pu, pv, pw));
+		}
 	}
 
 	public void setupShuffledIndices() {
@@ -102,12 +126,10 @@ public abstract class Sampler {
 	public abstract void generateSamples();
 
 	public Vector3d sampleHemisphere() {
-		// TODO MAMUUUUU
-		return null;
-	}
-
-	public void mapSamplesToHemisphere(double i) {
-		// TODO Mamuuuuuuu
+		if (count % sampleNum == 0) {
+			jump = ((int)((Math.random() * Integer.MAX_VALUE) % numSets)) * sampleNum;
+		}
+		return hemisphereSamples.get(jump + shuffledIndices[(int)((jump + count++) % sampleNum)]);
 	}
 
 }

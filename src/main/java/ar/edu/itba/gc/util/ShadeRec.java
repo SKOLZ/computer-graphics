@@ -17,6 +17,7 @@ public class ShadeRec {
 	private double u;
 	private double v;
 	private Vector3d normal;
+	private double pdf;
 
 	private int depth;
 
@@ -31,13 +32,14 @@ public class ShadeRec {
 		this.u = sr.getU();
 		this.v = sr.getV();
 		this.depth = sr.getDepth();
+		this.pdf = sr.getPdf();
 	}
 
 	public ShadeRec(World world) {
-		super();
 		this.hitAnObject = false;
 		this.world = world;
 		this.depth = 0;
+		this.pdf = 0;
 	}
 
 	public ShadeRec(boolean hitAnObject, World world, Material material,
@@ -53,6 +55,7 @@ public class ShadeRec {
 		this.u = u;
 		this.v = v;
 		this.depth = depth;
+		this.pdf = 0;
 	}
 
 	public double getU() {
@@ -129,6 +132,14 @@ public class ShadeRec {
 
 	public void setHitsAnObject(boolean hitsAnObject) {
 		this.hitAnObject = hitsAnObject;
+	}
+
+	public double getPdf() {
+		return pdf;
+	}
+
+	public void setPdf(double pdf) {
+		this.pdf = pdf;
 	}
 
 }

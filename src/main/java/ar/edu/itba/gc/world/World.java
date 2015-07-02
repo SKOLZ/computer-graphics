@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 import ar.edu.itba.gc.camera.Camera;
 import ar.edu.itba.gc.light.Light;
 import ar.edu.itba.gc.primitives.GeometricObject;
+import ar.edu.itba.gc.tracer.PathTracer;
 import ar.edu.itba.gc.tracer.Tracer;
 import ar.edu.itba.gc.tracer.WhittedTracer;
 import ar.edu.itba.gc.util.KDNode;
@@ -71,6 +72,10 @@ public class World {
 
 	public List<GeometricObject> getObjects() {
 		return this.objects;
+	}
+
+	public void setTracer(Tracer tracer) {
+		this.tracer = tracer;
 	}
 
 }

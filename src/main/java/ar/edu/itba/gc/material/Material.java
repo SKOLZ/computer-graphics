@@ -17,6 +17,10 @@ public abstract class Material {
 		return RGBColor.black();
 	}
 	
+	public RGBColor globalShade(ShadeRec sr) {
+		return RGBColor.black();
+	}
+	
 	protected World getWorld() {
 		return this.world;
 	}

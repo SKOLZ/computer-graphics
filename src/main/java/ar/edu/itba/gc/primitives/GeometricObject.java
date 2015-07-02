@@ -11,11 +11,11 @@ public abstract class GeometricObject {
 	public int count;
 	private Material material;
 
-	public GeometricObject(Material material) {
+	protected GeometricObject(Material material) {
 		this.material = material;
 	}
 
-	public GeometricObject() {
+	protected GeometricObject() {
 	}
 
 	public Material getMaterial() {

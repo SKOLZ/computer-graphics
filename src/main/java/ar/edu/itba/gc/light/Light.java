@@ -31,7 +31,7 @@ public abstract class Light {
 		return color;
 	}
 
-	public RGBColor L() {
+	public RGBColor L(ShadeRec sr) {
 		return RGBColor.mult(getColor(), getLs());
 	}
 
