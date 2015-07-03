@@ -44,5 +44,10 @@ public class Emisive extends Material {
 			return RGBColor.black();
 		}
 	}
+	
+	@Override
+	public RGBColor shade(ShadeRec sr) {
+		return RGBColor.mult(ce, ls); //TODO revisar
+	}
 
 }

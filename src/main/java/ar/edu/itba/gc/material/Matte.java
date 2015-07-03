@@ -57,7 +57,6 @@ public class Matte extends Material {
 		}
 		Vector3d wi = new Vector3d();
 		Vector3d wo = Vectors.scale(sr.getDirection(), -1);
-		double pdf;
 		RGBColor f = getDiffuseBRDF().pathtracingSampleF(sr, wo, wi);
 		double ndotwi = sr.getNormal().dot(wi);
 		Ray reflectedRay = new Ray(sr.getHitPoint(), wi);
