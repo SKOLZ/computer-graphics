@@ -29,9 +29,8 @@ public class Mesh extends GeometricObject {
 
 	private KDNode<MeshTriangle> tree;
 
-	public Mesh(final Vector3d[] vertices, final Vector3d[] normals,
-			final int[] indices, final double[] u, final double[] v,
-			final boolean smooth) {
+	public Mesh(final Vector3d[] vertices, final Vector3d[] normals, final int[] indices, final double[] u,
+			final double[] v, final boolean smooth) {
 		this.vertices = vertices;
 		this.normals = normals;
 		this.u = u;
@@ -89,9 +88,15 @@ public class Mesh extends GeometricObject {
 	}
 
 	@Override
-	public double hit(ShadeRec sr, double tmin, Vector3d origin,
-			Vector3d direction) {
-		return tree.hit(sr, tmin, origin, direction);
+	public double hit(ShadeRec sr, double tmin, Vector3d origin, Vector3d direction) {
+		Double t = tmin;
+		for (MeshTriangle obj : triangles) {
+			double auxT = obj.hit(sr, t, origin, direction);
+			if (auxT > 0 && sr.hitsAnObject()) {
+				t = auxT;
+			}
+		}
+		return t;
 	}
 
 	@Override

@@ -29,24 +29,25 @@ public class TransformParser {
 	public Transformation parse(Scanner scanner) {
 		Transformation transform = new Transformation();
 		while (scanner.hasNext()) {
-			String[] line = scanner.nextLine().trim().split(" ");
-			switch (line[0]) {
+			String line = scanner.nextLine().trim();
+			String[] lineValues = line.split(" ");
+			switch (lineValues[0]) {
 			case "Identity":
 				break;
+			case "Transform":
+				return this.parse(line.replace("[", "").replace("]", "").split(" "));
 			case "Translate":
-				transform.addTransaltion(new Vector3d(Double.valueOf(line[1]),
-						Double.valueOf(line[2]), Double.valueOf(line[3])));
+				transform.addTransaltion(new Vector3d(Double.valueOf(lineValues[1]), Double.valueOf(lineValues[2]),
+						Double.valueOf(lineValues[3])));
 				break;
 			case "Rotate":
-				transform.addRotation(new Rotation(new Vector3d(Double
-						.valueOf(line[2]), Double.valueOf(line[3]), Double
-						.valueOf(line[4])), Double.valueOf(line[1])));
+				transform.addRotation(new Rotation(new Vector3d(Double.valueOf(lineValues[2]),
+						Double.valueOf(lineValues[3]), Double.valueOf(lineValues[4])), Double.valueOf(lineValues[1])));
 				break;
 			case "Scale":
-				transform.addScaling(new Scaling(new Vector3d(Double
-						.valueOf(line[1].replaceAll("\\.", "")), Double
-						.valueOf(line[2].replaceAll("\\.", "")), Double
-						.valueOf(line[3].replaceAll("\\.", "")))));
+				transform.addScaling(new Scaling(new Vector3d(Double.valueOf(lineValues[1].replaceAll("\\.", "")),
+						Double.valueOf(lineValues[2].replaceAll("\\.", "")),
+						Double.valueOf(lineValues[3].replaceAll("\\.", "")))));
 				break;
 			case "TransformEnd":
 				return transform;

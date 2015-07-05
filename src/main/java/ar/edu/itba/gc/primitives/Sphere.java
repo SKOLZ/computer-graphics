@@ -14,7 +14,7 @@ public class Sphere extends EmisiveObject {
 	private Vector3d center;
 	private double radius;
 	private double invArea;
-	
+
 	public Sphere(double radius) {
 		this(null, new Vector3d(0, 0, 0), radius);
 	}
@@ -23,14 +23,14 @@ public class Sphere extends EmisiveObject {
 		super(material);
 		this.center = center;
 		this.radius = radius;
-		this.invArea = 1/(4 * World.PI * radius * radius);
+		this.invArea = 1 / (4 * World.PI * radius * radius);
 	}
 
 	public Sphere(Material material) {
 		super(material);
 		this.center = new Vector3d(0, 0, 0);
 		this.radius = 1.0;
-		this.invArea = 1/(4 * World.PI * radius * radius);
+		this.invArea = 1 / (4 * World.PI * radius * radius);
 	}
 
 	public Vector3d getCenter() {
@@ -50,8 +50,7 @@ public class Sphere extends EmisiveObject {
 	}
 
 	@Override
-	public double hit(ShadeRec sr, double tmin, Vector3d origin,
-			Vector3d direction) {
+	public double hit(ShadeRec sr, double tmin, Vector3d origin, Vector3d direction) {
 		count++;
 		double t;
 		Vector3d temp = Vectors.sub(origin, center);
@@ -68,11 +67,8 @@ public class Sphere extends EmisiveObject {
 			t = (-b - e) / denom;
 
 			if (t > Constants.KEPS && t < tmin) {
-				Vector3d hitPoint = Vectors.plus(origin,
-						Vectors.scale(direction, t));
-				Vector3d normal = Vectors.scale(
-						Vectors.plus(temp, Vectors.scale(direction, t)),
-						1 / radius);
+				Vector3d hitPoint = Vectors.plus(origin, Vectors.scale(direction, t));
+				Vector3d normal = Vectors.scale(Vectors.plus(temp, Vectors.scale(direction, t)), 1 / radius);
 				sr.setHitsAnObject(true);
 				sr.setMaterial(this.getMaterial());
 				sr.setNormal(normal);
@@ -86,11 +82,8 @@ public class Sphere extends EmisiveObject {
 			}
 			t = (-b + e) / denom;
 			if (t > Constants.KEPS && t < tmin) {
-				Vector3d hitPoint = Vectors.plus(origin,
-						Vectors.scale(direction, t));
-				Vector3d normal = Vectors.scale(
-						Vectors.plus(temp, Vectors.scale(direction, t)),
-						1 / radius);
+				Vector3d hitPoint = Vectors.plus(origin, Vectors.scale(direction, t));
+				Vector3d normal = Vectors.scale(Vectors.plus(temp, Vectors.scale(direction, t)), 1 / radius);
 				sr.setHitsAnObject(true);
 				sr.setMaterial(this.getMaterial());
 				sr.setNormal(normal);
@@ -166,8 +159,7 @@ public class Sphere extends EmisiveObject {
 				return false;
 		} else if (!center.equals(other.center))
 			return false;
-		if (Double.doubleToLongBits(radius) != Double
-				.doubleToLongBits(other.radius))
+		if (Double.doubleToLongBits(radius) != Double.doubleToLongBits(other.radius))
 			return false;
 		return true;
 	}
@@ -179,8 +171,7 @@ public class Sphere extends EmisiveObject {
 
 	@Override
 	public Vector3d sample() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Vector3d(0, 0, 0);
 	}
 
 	@Override

@@ -5,6 +5,8 @@ import java.util.Map;
 
 import ar.edu.itba.gc.material.Reflective;
 import ar.edu.itba.gc.parser.Attribute;
+import ar.edu.itba.gc.parser.AttributeUtils;
+import ar.edu.itba.gc.texture.ConstantColor;
 import ar.edu.itba.gc.texture.Texture;
 import ar.edu.itba.gc.util.RGBColor;
 import ar.edu.itba.gc.world.World;
@@ -29,7 +31,12 @@ class MirrorParser {
 			for (Attribute a : attributes) {
 				switch (a.getName()) {
 				case "Kr":
-					cd = textures.get(a.getValue());
+					if (AttributeUtils.isArray(a.getValue())) {
+						double[] values = AttributeUtils.getDoubleArray(a.getValue());
+						cd = new ConstantColor(new RGBColor(values[0], values[1], values[2]));
+					} else {
+						cd = textures.get(a.getValue());
+					}
 					break;
 				default:
 					break;

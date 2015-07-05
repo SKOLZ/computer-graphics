@@ -1,4 +1,4 @@
-package ar.edu.itba.gc.parser.world.light;
+package ar.edu.itba.gc.light;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -19,15 +19,13 @@ public class AreaLight extends Light {
 	private Vector3d lightNormal;
 	private Vector3d wi;
 
-	protected AreaLight(boolean shadows, double ls, RGBColor color,
-			EmisiveObject object, Emisive material, Vector3d samplePoint,
-			Vector3d lightNormal, Vector3d wi) {
-		super(shadows, ls, color);
+	public void setObject(EmisiveObject object) {
 		this.object = object;
-		this.material = material;
-		this.samplePoint = samplePoint;
-		this.lightNormal = lightNormal;
-		this.wi = wi;
+	}
+
+	public AreaLight(boolean shadows, double ls, RGBColor color, Emisive emisive) {
+		super(shadows, ls, color);
+		this.material = emisive;
 	}
 
 	@Override
@@ -42,8 +40,7 @@ public class AreaLight extends Light {
 	@Override
 	public boolean inShadow(Ray ray, ShadeRec sr) {
 		int numObjects = sr.getWorld().objects.size();
-		double ts = Vectors.sub(samplePoint, ray.getOrigin()).dot(
-				ray.getDirection());
+		double ts = Vectors.sub(samplePoint, ray.getOrigin()).dot(ray.getDirection());
 		double t;
 		for (int j = 0; j < numObjects; j++) {
 			t = sr.getWorld().getObjects().get(j).shadowHit(ray);
@@ -63,7 +60,7 @@ public class AreaLight extends Light {
 			return RGBColor.black();
 		}
 	}
-	
+
 	public double G(ShadeRec sr) {
 		double ndotd = Vectors.scale(lightNormal, -1).dot(wi);
 		Point3d p1 = new Point3d(samplePoint);
@@ -71,7 +68,7 @@ public class AreaLight extends Light {
 		double d2 = p1.distanceSquared(p2);
 		return (ndotd / d2);
 	}
-	
+
 	public double pdf(ShadeRec sr) {
 		return object.pdf(sr);
 	}

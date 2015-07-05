@@ -27,20 +27,18 @@ public class PinholeCamera extends Camera {
 		this(eye, lookAt, distance, 1.0);
 	}
 
-	public PinholeCamera(Vector3d eye, Vector3d lookAt, Vector3d up,
-			double distance) {
+	public PinholeCamera(Vector3d eye, Vector3d lookAt, Vector3d up, double distance) {
 		this(eye, lookAt, up, distance, 1.0, 1.0);
 	}
 
-	public PinholeCamera(Vector3d eye, Vector3d lookAt, double distance,
-			double zoom) {
+	public PinholeCamera(Vector3d eye, Vector3d lookAt, double distance, double zoom) {
 		super(eye, lookAt);
 		this.distance = distance;
 		this.zoom = zoom;
 	}
 
-	public PinholeCamera(Vector3d eye, Vector3d lookAt, Vector3d up,
-			double distance, double zoom, double exposureTime) {
+	public PinholeCamera(Vector3d eye, Vector3d lookAt, Vector3d up, double distance, double zoom,
+			double exposureTime) {
 		super(eye, lookAt, up, exposureTime);
 		this.distance = distance;
 		this.zoom = zoom;
@@ -58,14 +56,16 @@ public class PinholeCamera extends Camera {
 	public BufferedImage renderScene(World w) {
 		List<CompletableFuture<?>> futures = new LinkedList<CompletableFuture<?>>();
 		w.vp.setPixelSize(w.vp.getPixelSize() / zoom);
-		BufferedImage img = new BufferedImage(w.vp.getHorizontalRes(),
-				w.vp.getVerticalRes(), BufferedImage.TYPE_INT_RGB);
+		BufferedImage img = new BufferedImage(w.vp.getHorizontalRes(), w.vp.getVerticalRes(),
+				BufferedImage.TYPE_INT_RGB);
 		Ray ray = new Ray();
 		ray.setOrigin(getEye());
 		for (int r = 0; r < w.vp.getVerticalRes(); r++) {
 			for (int c = 0; c < w.vp.getHorizontalRes(); c++) {
-				futures.add(CompletableFuture.runAsync(this.run(r, c, ray, img,
-						w)));
+				// futures.add(CompletableFuture.runAsync(this.run(r, c, ray,
+				// img,
+				// w)));
+				this.run(r, c, ray, img, w);
 			}
 		}
 
@@ -80,18 +80,15 @@ public class PinholeCamera extends Camera {
 		return img;
 	}
 
-	private Runnable run(final int r, final int c, final Ray ray,
-			BufferedImage img, World w) {
+	private Runnable run(final int r, final int c, final Ray ray, BufferedImage img, World w) {
 		return () -> {
 			RGBColor l = RGBColor.black();
 
 			for (int i = 0; i < w.vp.getSampleNum(); i++) {
 				Vector2d samplePoint = w.vp.getSampler().sampleUnitSquare();
-				double x = w.vp.getPixelSize()
-						* (c - (w.vp.getHorizontalRes() * 0.5) + samplePoint.x);
+				double x = w.vp.getPixelSize() * (c - (w.vp.getHorizontalRes() * 0.5) + samplePoint.x);
 
-				double y = w.vp.getPixelSize()
-						* (r - (w.vp.getVerticalRes() * 0.5) + samplePoint.y);
+				double y = w.vp.getPixelSize() * (r - (w.vp.getVerticalRes() * 0.5) + samplePoint.y);
 				ray.setDirection(getRayDirection(new Vector2d(x, y)));
 
 				l.sum(w.tracer.traceRay(ray, 0));
@@ -102,8 +99,7 @@ public class PinholeCamera extends Camera {
 		};
 	}
 
-	private void displayPixel(int i, int j, final RGBColor pixelColor,
-			BufferedImage img, ViewPlane vp) {
+	private void displayPixel(int i, int j, final RGBColor pixelColor, BufferedImage img, ViewPlane vp) {
 		pixelColor.correctColor();
 		if (vp.getGamma() != 1.0) {
 			pixelColor.applyGamma(vp.getGammaInverse());

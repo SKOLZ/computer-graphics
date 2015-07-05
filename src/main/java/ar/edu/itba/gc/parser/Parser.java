@@ -17,13 +17,18 @@ public class Parser {
 	private WorldParser worldParser = new WorldParser();
 
 	public void parse(String path, int aaSamples, int depth, boolean usePathTracer) throws IOException {
+		if (path == null)
+			throw new IllegalArgumentException("Input file not defined");
+
+		final String cwd = path.substring(0, path.lastIndexOf("/") + 1);
+
 		World w = World.getInstance();
 		w.vp.setPixelSize(1.0);
 		w.vp.setSampleNum(aaSamples);
 		w.vp.setMaxDepth(depth);
 		w.background = RGBColor.black();
 		if (usePathTracer) {
-			w.setTracer(new PathTracer(w));			
+			w.setTracer(new PathTracer(w));
 		}
 
 		Scanner scanner = new Scanner(Paths.get(path), "UTF-8");
@@ -42,15 +47,15 @@ public class Parser {
 
 			while (scanner.hasNext()) {
 				line = scanner.nextLine();
-				if (!line.startsWith(" ") && !line.startsWith("\t\t")
-						&& !line.equals("\t")) {
+				if (!line.startsWith(" ") && !line.startsWith("\t\t") && !line.equals("\t")) {
 					if (line.startsWith("WorldEnd"))
 						break;
 					if (line.startsWith("Include")) {
-						String includedPath = line.split(" ")[1].replaceAll(
-								"\"", "");
-						Scanner auxScanner = new Scanner(
-								Paths.get(includedPath), "UTF-8");
+						String includedPath = line.split(" ")[1].replaceAll("\"", "");
+						if (!includedPath.startsWith("/")) {
+							includedPath = new StringBuilder().append(cwd).append(includedPath).toString();
+						}
+						Scanner auxScanner = new Scanner(Paths.get(includedPath), "UTF-8");
 						while (auxScanner.hasNext()) {
 							world.append(auxScanner.nextLine()).append("\n");
 						}

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import ar.edu.itba.gc.material.Material;
+import ar.edu.itba.gc.material.Matte;
 import ar.edu.itba.gc.parser.Attribute;
 import ar.edu.itba.gc.parser.AttributesParser;
 import ar.edu.itba.gc.texture.Texture;
@@ -44,6 +45,8 @@ public class MaterialParser {
 					return glassParser.parse(attributes, textures, world);
 				case "mirror":
 					return mirrorParser.parse(attributes, textures, world);
+				case "null":
+					return new Matte(world, 0, 0, null, world.vp.getSampler());
 				default:
 					throw new IllegalArgumentException("Invalid Material type");
 				}

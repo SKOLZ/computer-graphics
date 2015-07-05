@@ -3,7 +3,6 @@ package ar.edu.itba.gc.material;
 import javax.vecmath.Vector3d;
 
 import ar.edu.itba.gc.light.Light;
-import ar.edu.itba.gc.parser.world.light.AreaLight;
 import ar.edu.itba.gc.sampler.Sampler;
 import ar.edu.itba.gc.texture.Texture;
 import ar.edu.itba.gc.util.RGBColor;

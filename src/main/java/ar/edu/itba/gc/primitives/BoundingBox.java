@@ -13,7 +13,7 @@ public class BoundingBox {
 				Double.MAX_VALUE);
 	}
 
-	private double x0, x1, y0, y1, z0, z1;
+	public double x0, x1, y0, y1, z0, z1;
 
 	public BoundingBox() {
 		super();

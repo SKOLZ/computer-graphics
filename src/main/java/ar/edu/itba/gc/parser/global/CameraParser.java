@@ -29,10 +29,12 @@ class CameraParser {
 		List<Attribute> attributes = attributesParser.parse(scanner);
 		for (Attribute attr : attributes) {
 			switch (attr.getName()) {
-			case "focaldistance":
+			case "fov":
 				distance = Double.valueOf(attr.getValue());
 			}
 		}
+		if (distance == null)
+			throw new IllegalArgumentException("Camera's fov missing");
 		return new PinholeCamera(lookAt.getEye(), lookAt.getLookAt(),
 				lookAt.getUp(), distance);
 	}

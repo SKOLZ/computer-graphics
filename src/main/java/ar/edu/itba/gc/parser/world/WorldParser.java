@@ -3,27 +3,32 @@ package ar.edu.itba.gc.parser.world;
 import java.util.Map;
 import java.util.Scanner;
 
+import com.google.common.collect.Maps;
+
 import ar.edu.itba.gc.light.AmbientLight;
+import ar.edu.itba.gc.light.AreaLight;
 import ar.edu.itba.gc.light.Light;
 import ar.edu.itba.gc.material.Material;
+import ar.edu.itba.gc.material.Matte;
 import ar.edu.itba.gc.parser.world.light.LightParser;
 import ar.edu.itba.gc.parser.world.material.MaterialParser;
 import ar.edu.itba.gc.parser.world.shape.ShapeParser;
 import ar.edu.itba.gc.parser.world.texture.TextureParser;
 import ar.edu.itba.gc.parser.world.transform.TransformParser;
 import ar.edu.itba.gc.parser.world.transform.Transformation;
+import ar.edu.itba.gc.primitives.EmisiveObject;
 import ar.edu.itba.gc.primitives.GeometricObject;
 import ar.edu.itba.gc.primitives.Instance;
 import ar.edu.itba.gc.texture.Texture;
 import ar.edu.itba.gc.world.World;
-
-import com.google.common.collect.Maps;
 
 public class WorldParser {
 
 	private World world;
 	private Material currentMaterial;
 	private Transformation transform;
+
+	private AreaLight areaLight = null;
 
 	private Map<String, Material> materials = Maps.newHashMap();
 	private Map<String, Texture> textures = Maps.newHashMap();
@@ -61,15 +66,20 @@ public class WorldParser {
 			case "Shape":
 				parseShape(scanner, splittedLine);
 				break;
+			case "Material":
+				currentMaterial = new Matte(world, 0, 0, null, world.vp.getSampler());
+				break;
 			case "NamedMaterial":
 				parseMaterial(splittedLine);
 				break;
 			case "LightSource":
 				parseLight(scanner, splittedLine);
 				break;
+			case "AreaLightSource":
+				areaLight = AreaLightParser.instance().parse(scanner, world);
+				break;
 			case "Transform":
-				transform = transformParser.parse(line.replace("[", "")
-						.replace("]", "").split(" "));
+				transform = transformParser.parse(line.replace("[", "").replace("]", "").split(" "));
 				break;
 			case "TransformBegin":
 				transform = transformParser.parse(scanner);
@@ -81,8 +91,7 @@ public class WorldParser {
 	}
 
 	private void parseLight(Scanner scanner, String[] splittedLine) {
-		Light light = this.lightParser.parse(scanner,
-				splittedLine[1].replaceAll("\"", ""));
+		Light light = this.lightParser.parse(scanner, splittedLine[1].replaceAll("\"", ""));
 		if (light instanceof AmbientLight)
 			world.ambientLight = light;
 		else
@@ -92,8 +101,7 @@ public class WorldParser {
 	private void parseMaterial(Scanner scanner, String[] line) {
 		String name = line[1].replaceAll("\"", "");
 		if (materials.containsKey(name))
-			throw new IllegalArgumentException("Material " + name
-					+ " already exists!");
+			throw new IllegalArgumentException("Material " + name + " already exists!");
 		materials.put(name, materialParser.parse(scanner, textures, world));
 	}
 
@@ -101,8 +109,7 @@ public class WorldParser {
 		String name = line[1].replaceAll("\"", "");
 		String type = line[3].replaceAll("\"", "");
 		if (textures.containsKey(name))
-			throw new IllegalArgumentException("Texture " + name
-					+ " already exists!");
+			throw new IllegalArgumentException("Texture " + name + " already exists!");
 		textures.put(name, textureParser.parse(scanner, type));
 	}
 
@@ -115,9 +122,14 @@ public class WorldParser {
 	private void parseShape(Scanner scanner, String[] line) {
 		if (currentMaterial == null)
 			throw new IllegalStateException("Material for Shape not setted");
-		GeometricObject obj = shapeParser.parse(scanner,
-				line[1].replaceAll("\"", ""));
+		GeometricObject obj = shapeParser.parse(scanner, line[1].replaceAll("\"", ""));
 		obj.setMaterial(currentMaterial);
+		if (areaLight != null && obj instanceof EmisiveObject) {
+			areaLight.setObject((EmisiveObject) obj);
+			world.addLight(areaLight);
+			areaLight = null;
+			return;
+		}
 		Instance instance = new Instance(obj);
 		if (transform != null) {
 			instance.transform(this.transform.getMatrix());

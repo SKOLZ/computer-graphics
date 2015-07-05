@@ -5,7 +5,10 @@ import java.util.Map;
 
 import ar.edu.itba.gc.material.Phong;
 import ar.edu.itba.gc.parser.Attribute;
+import ar.edu.itba.gc.parser.AttributeUtils;
+import ar.edu.itba.gc.texture.ConstantColor;
 import ar.edu.itba.gc.texture.Texture;
+import ar.edu.itba.gc.util.RGBColor;
 import ar.edu.itba.gc.world.World;
 
 class MetalParser {
@@ -30,7 +33,12 @@ class MetalParser {
 			for (Attribute a : attributes) {
 				switch (a.getName()) {
 				case "Kr":
-					texture = textures.get(a.getValue());
+					if (AttributeUtils.isArray(a.getValue())) {
+						double[] values = AttributeUtils.getDoubleArray(a.getValue());
+						texture = new ConstantColor(new RGBColor(values[0], values[1], values[2]));
+					} else {
+						texture = textures.get(a.getValue());
+					}
 					break;
 				case "uroughness":
 					uroughness = Double.valueOf(a.getValue());
